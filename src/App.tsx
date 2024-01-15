@@ -1,18 +1,17 @@
-import { Typography, Box, Button } from '@mui/material'
-import * as React from 'react'
+import { Navigate, Route, Routes } from 'react-router-dom'
+import Login from './pages/Login'
+import Layout from './Layout'
+import UserContent from './pages/UserContent'
 
 const App = (): JSX.Element => {
-  const [count, setCount] = React.useState(0)
-
-  const increment = () => {
-    setCount(prev => prev + 1)
-  }
   return (
-    <Box>
-      <Typography>Hello world!</Typography>
-      <Button onClick={increment}>Set counter</Button>
-      <Typography>{count}</Typography>
-    </Box>
+    <Layout>
+      <Routes>
+        <Route path="/" element={<Navigate to="/login" />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/user-content" element={<UserContent />} />
+      </Routes>
+    </Layout>
   )
 }
 
