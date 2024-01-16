@@ -1,4 +1,4 @@
-import { UseMutationResult, useMutation, useQueryClient } from '@tanstack/react-query'
+import { useMutation } from '@tanstack/react-query'
 import { javaTweetsApiClient } from './api/javaTweetsApiClient'
 
 export const usePostUserCredentials = () => {

@@ -12,8 +12,9 @@ const LargeActionButton = ({
   Icon?: React.FC
 }): JSX.Element => {
   return (
-    <Box>
+    <Box sx={{ width: '50%', m: 2 }}>
       <Button
+        fullWidth
         onClick={onClick}
         startIcon={Icon ? <Icon /> : null}
         disabled={isLoading ? isLoading : false}

@@ -1,7 +1,7 @@
 import { Box } from '@mui/material'
-import img from './background.png'
+import img from '../background.png'
 
-const Layout = ({ children }: { children: React.ReactNode }): JSX.Element => {
+const Background = ({ children }: { children: React.ReactNode }): JSX.Element => {
   return (
     <Box
       sx={{
@@ -19,4 +19,4 @@ const Layout = ({ children }: { children: React.ReactNode }): JSX.Element => {
   )
 }
 
-export default Layout
+export default Background

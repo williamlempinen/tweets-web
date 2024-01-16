@@ -20,12 +20,21 @@ const ErrorBox = ({
         alignItems: 'center',
         flexDirection: 'column',
         m: 2,
+        gap: 2,
       }}
     >
       <ErrorIcon fontSize="large" color="error" />
-      <Typography variant="h6">{message}</Typography>
+      <Typography variant="subtitle1">{message}</Typography>
       {onClick ? (
-        <Button onClick={onClick} disabled={isLoading}>
+        <Button
+          onClick={onClick}
+          disabled={isLoading}
+          sx={{
+            backgroundColor: 'error.main',
+            color: 'white',
+            '&:hover': { backgroundColor: 'error.light' },
+          }}
+        >
           {buttonText}
         </Button>
       ) : null}
