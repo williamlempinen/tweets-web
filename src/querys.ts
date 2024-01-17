@@ -4,5 +4,5 @@ import { javaTweetsApiClient } from './api/javaTweetsApiClient'
 export const usePostUserCredentials = () => {
   const { userLogin } = javaTweetsApiClient()
 
-  return useMutation((payload: User) => userLogin(payload))
+  return useMutation((payload: UserLoginDTO) => userLogin(payload))
 }

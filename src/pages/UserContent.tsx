@@ -1,10 +1,11 @@
 import { Box, Typography } from '@mui/material'
+import ContentPaper from '../components/ContentPaper'
 
 const UserContent = (): JSX.Element => {
   return (
-    <Box>
-      <Typography>moikka</Typography>
-    </Box>
+    <ContentPaper>
+      <Box></Box>
+    </ContentPaper>
   )
 }
 

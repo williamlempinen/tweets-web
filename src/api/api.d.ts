@@ -1,4 +1,4 @@
-type User = {
-    email: string,
-    password: string
+type UserLoginDTO = {
+  email: string
+  password: string
 }
