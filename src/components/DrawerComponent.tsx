@@ -76,8 +76,6 @@ const DrawerContent = (): JSX.Element => {
           ))}
         </List>
       </Box>
-      {/*author item => route, content*/}
-      {/*settings item*/}
     </Box>
   )
 }

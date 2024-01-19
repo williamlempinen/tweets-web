@@ -1,10 +1,11 @@
 import * as React from 'react'
-import { Box, Card, IconButton, Toolbar, TextField, InputAdornment } from '@mui/material'
-import DiamondIcon from '@mui/icons-material/Diamond'
+import { Box, Card, IconButton, Toolbar, TextField, InputAdornment, Tooltip } from '@mui/material'
+import MenuIcon from '@mui/icons-material/Menu'
 import SearchIcon from '@mui/icons-material/Search'
 import theme from '../theme'
 import DrawerComponent from './DrawerComponent'
 import LargeActionButton from './LargeActionButton'
+import ScrollToTopButton from './ScrollToTopButton'
 import RateReviewIcon from '@mui/icons-material/RateReview'
 
 const ContentPaper = ({ children }: { children: React.ReactNode }): JSX.Element => {
@@ -12,7 +13,7 @@ const ContentPaper = ({ children }: { children: React.ReactNode }): JSX.Element 
   const [searchParam, setSearchParam] = React.useState<string>('')
 
   const handleDrawer = () => {
-    setOpen(!open)
+    setOpen((prev) => !prev)
   }
 
   const handleSearchParamChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -33,27 +34,29 @@ const ContentPaper = ({ children }: { children: React.ReactNode }): JSX.Element 
       <Card
         id="drawer-container"
         sx={{
-          height: '100vh',
+          height: '100%',
+          minHeight: '95vh',
           minWidth: '90%',
           display: 'flex',
-          justifyContent: 'start',
-          alignItems: 'start',
+          flexDirection: 'column',
+          alignItems: 'center',
           m: 1,
           position: 'relative',
         }}
       >
         <DrawerComponent open={open} handleDrawer={handleDrawer} />
         <Toolbar sx={{ width: '100%', display: 'felx', justifyContent: 'space-around', mb: 3 }}>
-          <IconButton onClick={handleDrawer} sx={{ mr: 2 }}>
-            <DiamondIcon fontSize="large" sx={{ color: theme.palette.primary.main }} />
-          </IconButton>
+          <Tooltip title="More">
+            <IconButton onClick={handleDrawer} sx={{ mx: 1 }}>
+              <MenuIcon fontSize="large" sx={{ color: theme.palette.primary.main }} />
+            </IconButton>
+          </Tooltip>
           <TextField
             value={searchParam}
             onChange={handleSearchParamChange}
             variant="standard"
             fullWidth
             placeholder="Search"
-            sx={{ '&:hover': { color: 'secondary.main' } }}
             InputProps={{
               endAdornment: (
                 <InputAdornment position="end">
@@ -64,9 +67,11 @@ const ContentPaper = ({ children }: { children: React.ReactNode }): JSX.Element 
               ),
             }}
           />
-          <LargeActionButton buttonText="post a blog" onClick={handleBlogPost} Icon={RateReviewIcon} />
+          <LargeActionButton buttonText="tweet about it!" onClick={handleBlogPost} Icon={RateReviewIcon} />
         </Toolbar>
         {children}
+        {/**scroll to top not working properly */}
+        <ScrollToTopButton />
       </Card>
     </Box>
   )

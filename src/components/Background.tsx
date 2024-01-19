@@ -9,9 +9,11 @@ const Background = ({ children }: { children: React.ReactNode }): JSX.Element =>
         backgroundImage: `url(${img})`,
         backgroundRepeat: 'no-repeat',
         backgroundSize: 'cover',
+        backgroundAttachment: 'fixed',
         opacity: 0.9,
-        minHeight: '100vh',
-        minWidth: '100vh',
+        height: '100%',
+        minWidth: '100%',
+        overflowY: 'auto',
       }}
     >
       {children}

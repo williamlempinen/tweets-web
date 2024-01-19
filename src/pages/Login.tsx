@@ -1,14 +1,5 @@
 import * as React from 'react'
-import {
-  Card,
-  Box,
-  Typography,
-  TextField,
-  InputAdornment,
-  IconButton,
-  Stack,
-  LinearProgress,
-} from '@mui/material'
+import { Card, Box, Typography, TextField, InputAdornment, IconButton, Stack, LinearProgress } from '@mui/material'
 import PasswordIcon from '@mui/icons-material/Password'
 import MailIcon from '@mui/icons-material/Mail'
 import VisibilityOff from '@mui/icons-material/VisibilityOff'
@@ -18,6 +9,7 @@ import { usePostUserCredentials } from '../querys'
 import { useNavigate } from 'react-router-dom'
 import ErrorBox from '../components/ErrorBox'
 import LargeActionButton from '../components/LargeActionButton'
+import { AppContext } from '../AppContext'
 
 const Root = ({ children }: { children: React.ReactNode }): JSX.Element => {
   return (
@@ -48,6 +40,10 @@ const Login = (): JSX.Element => {
   const [password, setPassword] = React.useState<string>('')
   const [showPassword, setShowPassword] = React.useState<boolean>(false)
 
+  const { setUser } = React.useContext(AppContext)
+
+  //salasana tulisi varmaan salata ennenkuin se lähetetään eteenpäin
+
   const navigate = useNavigate()
 
   const { mutate: userLogin, isError: isLoginError, isLoading } = usePostUserCredentials()
@@ -70,8 +66,12 @@ const Login = (): JSX.Element => {
       password,
     }
     userLogin(userPayload, {
-      onSuccess: () => {
-        navigate('/user-content')
+      onSuccess: (user) => {
+        if (user) {
+          sessionStorage.setItem('user', JSON.stringify(user))
+          navigate('/user-content')
+          setUser(user)
+        }
       },
     })
   }
@@ -134,11 +134,7 @@ const Login = (): JSX.Element => {
               endAdornment: (
                 <InputAdornment position="end">
                   <IconButton onClick={handleClickShowPassword}>
-                    {showPassword ? (
-                      <VisibilityOff color="primary" />
-                    ) : (
-                      <Visibility color="primary" />
-                    )}
+                    {showPassword ? <VisibilityOff color="primary" /> : <Visibility color="primary" />}
                   </IconButton>
                 </InputAdornment>
               ),
@@ -150,17 +146,9 @@ const Login = (): JSX.Element => {
             onChange={handlePassword}
           />
         </Box>
-        <LargeActionButton
-          onClick={handleUserLogin}
-          buttonText="LOGIN"
-          Icon={LoginIcon}
-          isLoading={isLoading}
-        />
+        <LargeActionButton onClick={handleUserLogin} buttonText="LOGIN" Icon={LoginIcon} isLoading={isLoading} />
         {isLoginError ? (
-          <ErrorBox
-            isLoading={isLoading}
-            message="Error during login, check your email and password."
-          />
+          <ErrorBox isLoading={isLoading} message="Error during login, check your email and password." />
         ) : null}
         {isLoading ? <LoadingProgress /> : null}
         {/**tänne footer, jossa oma oma nimi */}

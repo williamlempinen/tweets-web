@@ -3,14 +3,18 @@ import axios from 'axios'
 const URL = import.meta.env.VITE_API_URL
 
 type JavaTweetsApiClientReturnType = {
-  userLogin: (userCredentials: UserLoginDTO) => Promise<void>
+  postUserLogin: (userCredentials: UserLoginDTO) => Promise<User>
+  getFindAllTweets: () => Promise<Tweet[]>
 }
 
 export const javaTweetsApiClient = (): JavaTweetsApiClientReturnType => {
-  const userLogin = (userCredentials: UserLoginDTO) =>
-    axios.post(`${URL}/api/user/login`, userCredentials).then((response) => response.data)
+  const postUserLogin = (userCredentials: UserLoginDTO) =>
+    axios.post(`${URL}/user/login`, userCredentials).then((response) => response.data)
+
+  const getFindAllTweets = () => axios.get(`${URL}/tweet/find-all`).then((response) => response.data)
 
   return {
-    userLogin,
+    postUserLogin,
+    getFindAllTweets,
   }
 }
