@@ -14,10 +14,11 @@ type User = {
 
 type CommentType = {
   id: number
-  commentOwner: User | string //option for string during development
+  ownerName: string 
   onTweet: Tweet
   content: string
-  likes: number
+  likes: number[]
+  likesCount: number
   timeStamp: Date
 }
 
@@ -26,7 +27,20 @@ type Tweet = {
   title: string
   content: string
   tweetComments: CommentType[] | []
-  likes: number
+  likes: number[]
   ownerName: string
   timeStamp: Date
+  likesCount: number
 } | null
+
+type PostTweet = {
+  userId: number
+  title: string
+  content: string
+}
+
+type PostComment = {
+  tweetId: number
+  userId: number | undefined
+  content: string
+}

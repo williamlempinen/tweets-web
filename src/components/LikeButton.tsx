@@ -1,14 +1,11 @@
 import { Tooltip, IconButton } from '@mui/material'
 import FavoriteIcon from '@mui/icons-material/Favorite'
 
-const LikeButton = ({ id }: { id: number | undefined }): JSX.Element => {
-  const handleLike = () => {
-    console.log('liked')
-  }
+const LikeButton = ({onClick}: {onClick: () => void}): JSX.Element => {
   return (
     <>
       <Tooltip title="Like">
-        <IconButton id={`${id}`} onClick={handleLike}>
+        <IconButton onClick={onClick}>
           <FavoriteIcon fontSize="small" />
         </IconButton>
       </Tooltip>

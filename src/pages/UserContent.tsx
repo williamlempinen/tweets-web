@@ -42,6 +42,7 @@ const UserContent = (): JSX.Element => {
     setIsData(!isLoading && (data.length === 0 ? false : true))
   }, [data, isLoading])
   const reverseTweetOrder = [...data].reverse()
+  console.log(reverseTweetOrder)
 
   if (isError) {
     //big problem here
@@ -71,8 +72,8 @@ const UserContent = (): JSX.Element => {
 
   return (
     <Root>
-      {reverseTweetOrder.map((tweet) => (
-        <TweetCard tweet={tweet} />
+      {reverseTweetOrder.map((tweet, index) => (
+        <TweetCard key={`${tweet?.id}-${index}`} tweet={tweet} />
       ))}
     </Root>
   )
