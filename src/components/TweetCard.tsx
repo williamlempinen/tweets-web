@@ -4,7 +4,6 @@ import SendIcon from '@mui/icons-material/Send'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import theme from '../theme'
 import LikeButton from './LikeButton'
-
 import { format } from 'date-fns'
 import { AppContext } from '../AppContext'
 import { usePostAddComment, usePostLikeComment, usePostLikeTweet } from '../querys'
@@ -19,7 +18,7 @@ const TweetCard = ({ tweet }: { tweet: Tweet }): JSX.Element => {
 
   const { mutate: likeTweet, isError: likeTweetIsError } = usePostLikeTweet(user.id)
 
-  const { mutate: addComment, isError: newCommentIsError } = usePostAddComment(user?.name)
+  const { mutate: addComment, isError: newCommentIsError } = usePostAddComment(user.name)
 
   const { mutate: likeComment, isError: likeCommentIsError } = usePostLikeComment(user.id)
 
@@ -30,7 +29,6 @@ const TweetCard = ({ tweet }: { tweet: Tweet }): JSX.Element => {
   }
 
   const handleLikeComment = (commentId: number) => {
-    console.log('comment like', commentId)
     if (user.id && commentId) {
       likeComment(commentId)
     }
@@ -60,12 +58,18 @@ const TweetCard = ({ tweet }: { tweet: Tweet }): JSX.Element => {
       <Card key={`${tweet?.id}-${tweet?.timeStamp}`} elevation={4} sx={{ width: '95%', my: 2, p: 1, minHeight: 150 }}>
         <Box sx={{ display: 'flex', gap: 3, alignItems: 'center', mx: 3 }}>
           <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-            <Typography variant="caption" color="text.secondary">
-              {format(new Date(tweet?.timeStamp), 'HH:mm')}
-            </Typography>
-            <Typography variant="caption" color="text.secondary">
-              {format(new Date(tweet?.timeStamp), 'dd/MM/yyyy')}
-            </Typography>
+            {tweet?.timeStamp ? (
+              <>
+                <Typography variant="caption" color="text.secondary">
+                  {format(new Date(tweet.timeStamp), 'HH:mm')}
+                </Typography>
+                <Typography variant="caption" color="text.secondary">
+                  {format(new Date(tweet.timeStamp), 'dd/MM/yyyy')}
+                </Typography>
+              </>
+            ) : (
+              <Typography variant="caption">No timestamp</Typography>
+            )}
             <Typography variant="subtitle2" color="text.primary">
               {tweet?.ownerName}
             </Typography>
@@ -92,7 +96,7 @@ const TweetCard = ({ tweet }: { tweet: Tweet }): JSX.Element => {
         </Box>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', px: 1 }}>
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <LikeButton onClick={() => handleLikeTweet(tweet.id)} />
+            <LikeButton isLiked={tweet?.likes.includes(user.id)} onClick={() => handleLikeTweet(tweet.id)} />
             <Typography variant="caption" color="text.secondary">
               {`${tweet?.likesCount} likes`}
             </Typography>
@@ -155,13 +159,16 @@ const TweetCard = ({ tweet }: { tweet: Tweet }): JSX.Element => {
                 }}
               >
                 <Box sx={{ flexWrap: 'wrap', maxWidth: 900 }}>
-                  <Typography variant="caption" color="text.secondary" key={comment.id}>
+                  <Typography variant="caption" color="text.secondary">
                     {`${comment.ownerName} - ${format(new Date(tweet?.timeStamp), 'dd/MM/yyyy')}`}
                   </Typography>
-                  <Typography key={comment.id}>{comment.content}</Typography>
+                  <Typography>{comment.content}</Typography>
                 </Box>
                 <Box>
-                  <LikeButton onClick={() => handleLikeComment(comment.id)} />
+                  <LikeButton
+                    isLiked={comment?.likes.includes(user.id)}
+                    onClick={() => handleLikeComment(comment.id)}
+                  />
                   <Typography variant="caption" color="text.secondary" key={comment.id}>
                     {`${comment.likesCount} likes`}
                   </Typography>

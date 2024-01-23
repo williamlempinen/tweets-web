@@ -1,37 +1,13 @@
 import * as React from 'react'
-import {
-  Box,
-  Card,
-  IconButton,
-  Toolbar,
-  TextField,
-  InputAdornment,
-  Tooltip,
-  Dialog,
-  DialogTitle,
-  Typography,
-} from '@mui/material'
+import { Box, Card, IconButton, Toolbar, TextField, InputAdornment, Tooltip } from '@mui/material'
 import MenuIcon from '@mui/icons-material/Menu'
 import SearchIcon from '@mui/icons-material/Search'
 import theme from '../theme'
 import DrawerComponent from './DrawerComponent'
+import DialogComponent from './DialogComponent'
 import LargeActionButton from './LargeActionButton'
 import ScrollToTopButton from './ScrollToTopButton'
 import RateReviewIcon from '@mui/icons-material/RateReview'
-
-const DialogComponent = ({ open, handleClose }: { open: boolean; handleClose: () => void }): JSX.Element => {
-  return (
-    <Dialog open={open} onClose={handleClose} fullWidth>
-      <DialogTitle>Post a Tweet</DialogTitle>
-      <Box>
-        <Typography>moikka</Typography>
-        <Typography>moikka</Typography>
-        <Typography>moikka</Typography>
-        <Typography>moikka</Typography>
-      </Box>
-    </Dialog>
-  )
-}
 
 const ContentPaper = ({ children }: { children: React.ReactNode }): JSX.Element => {
   const [openDrawer, setOpenDrawer] = React.useState<boolean>(false)
@@ -53,11 +29,6 @@ const ContentPaper = ({ children }: { children: React.ReactNode }): JSX.Element 
 
   const handleSearch = () => {
     console.log('search icon clicked')
-  }
-
-  const handleBlogPost = () => {
-    handleDialog()
-    console.log('post a blog button')
   }
 
   return (
@@ -99,7 +70,7 @@ const ContentPaper = ({ children }: { children: React.ReactNode }): JSX.Element 
             }}
           />
           <DialogComponent open={openDialog} handleClose={handleDialog} />
-          <LargeActionButton buttonText="tweet about it!" onClick={handleBlogPost} Icon={RateReviewIcon} />
+          <LargeActionButton buttonText="tweet about it!" onClick={handleDialog} Icon={RateReviewIcon} />
         </Toolbar>
         {children}
         {/**scroll to top not working properly */}

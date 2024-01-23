@@ -4,6 +4,7 @@ import ContentPaper from '../components/ContentPaper'
 import TweetCard from '../components/TweetCard'
 import { useFindAllTweets } from '../querys'
 import ErrorBox from '../components/ErrorBox'
+import theme from '../theme'
 
 const Root = ({ children }: { children: React.ReactNode }): JSX.Element => {
   return (
@@ -39,13 +40,11 @@ const UserContent = (): JSX.Element => {
   const { data = [], isError, isLoading, refetch } = useFindAllTweets()
 
   React.useEffect(() => {
-    setIsData(!isLoading && (data.length === 0 ? false : true))
+    setIsData(!isLoading && (data.length !== 0 ? true : false))
   }, [data, isLoading])
-  const reverseTweetOrder = [...data].reverse()
-  console.log(reverseTweetOrder)
+  const tweets = [...data].reverse()
 
   if (isError) {
-    //big problem here
     return (
       <Root>
         <ErrorBox isLoading={isLoading} message="Error happened :(" onClick={refetch} buttonText="Try again" />
@@ -54,7 +53,6 @@ const UserContent = (): JSX.Element => {
   }
 
   if (isLoading) {
-    //big problem here
     return (
       <Root>
         <LoadingSkeleton />
@@ -65,14 +63,18 @@ const UserContent = (): JSX.Element => {
   if (!isData) {
     return (
       <Root>
-        <Typography>No data</Typography>
+        <Box sx={{ border: `2px solid ${theme.palette.primary.main}`, borderRadius: 1, px: 1, py: 2 }}>
+          <Typography variant="h6" color="text.primary">
+            No tweets yet, be the first to tweet something!!
+          </Typography>
+        </Box>
       </Root>
     )
   }
 
   return (
     <Root>
-      {reverseTweetOrder.map((tweet, index) => (
+      {tweets.map((tweet, index) => (
         <TweetCard key={`${tweet?.id}-${index}`} tweet={tweet} />
       ))}
     </Root>

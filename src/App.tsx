@@ -7,7 +7,11 @@ import UserProfile from './pages/UserProfile'
 const PrivateRoute = ({ children }: { children: React.ReactNode }) => {
   const isAuthenticated = sessionStorage.getItem('user')
 
-  return isAuthenticated ? children : <Navigate to="/login" />
+  if (isAuthenticated) {
+    return children
+  }
+
+  return <Navigate to="/login" />
 }
 
 const App = (): JSX.Element => {

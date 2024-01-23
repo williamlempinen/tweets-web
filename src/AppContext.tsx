@@ -8,13 +8,13 @@ type AppContextType = {
 export const AppContext = React.createContext<AppContextType>({} as AppContextType)
 
 export const AppContextProvider = ({ children }: { children: React.ReactNode }): JSX.Element => {
-  const [user, setUser] = React.useState<User>()
+  const [user, setUser] = React.useState<User | undefined>()
 
   React.useEffect(() => {
     const storedUser = sessionStorage.getItem('user')
     if (storedUser) {
       setUser(JSON.parse(storedUser))
-    } 
+    }
   }, [])
 
   return <AppContext.Provider value={{ user, setUser }}>{children}</AppContext.Provider>

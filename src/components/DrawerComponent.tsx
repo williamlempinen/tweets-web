@@ -7,15 +7,19 @@ import DraftsIcon from '@mui/icons-material/Drafts'
 import SettingsIcon from '@mui/icons-material/Settings'
 import AttributionIcon from '@mui/icons-material/Attribution'
 import theme from '../theme'
+import { useNavigate } from 'react-router-dom'
 
 type DrawerElement = {
   name: string
   Icon?: React.ReactNode
+  nav?: string
 }
 
 const DrawerContent = (): JSX.Element => {
+  const navigate = useNavigate()
+
   const drawerPrimaryElements: DrawerElement[] = [
-    { name: 'Home', Icon: <HomeIcon /> },
+    { name: 'Home', Icon: <HomeIcon />, nav: '/user-content' },
     { name: 'Messages', Icon: <MailIcon /> },
     { name: 'Friends', Icon: <PeopleAltIcon /> },
     { name: 'Drafts', Icon: <DraftsIcon /> },
@@ -27,6 +31,7 @@ const DrawerContent = (): JSX.Element => {
   ]
 
   const handleAvatar = () => {
+    navigate('/user-profile')
     console.log('avatar clicked')
   }
 
@@ -52,7 +57,7 @@ const DrawerContent = (): JSX.Element => {
         <List>
           {drawerPrimaryElements.map((element) => (
             <ListItem key={element.name} sx={{ color: 'primary.main' }} disablePadding>
-              <ListItemButton>
+              <ListItemButton onClick={() => element.nav && navigate(element.nav)}>
                 {element.Icon ? (
                   <ListItemIcon sx={{ color: theme.palette.primary.main }}>{element.Icon}</ListItemIcon>
                 ) : null}
