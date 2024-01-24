@@ -5,7 +5,7 @@ import theme from '../theme'
 const LikeButton = ({ onClick, isLiked }: { onClick: () => void; isLiked: boolean }): JSX.Element => {
   return (
     <>
-      <Tooltip title="Like">
+      <Tooltip title={isLiked ? 'Dislike' : 'Like'}>
         <IconButton onClick={onClick}>
           <FavoriteIcon fontSize="small" sx={{ color: isLiked ? theme.palette.secondary.main : '' }} />
         </IconButton>

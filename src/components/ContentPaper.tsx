@@ -8,10 +8,12 @@ import DialogComponent from './DialogComponent'
 import LargeActionButton from './LargeActionButton'
 import ScrollToTopButton from './ScrollToTopButton'
 import RateReviewIcon from '@mui/icons-material/RateReview'
+import NoFeatureDialog from './NoFeatureDialog'
 
 const ContentPaper = ({ children }: { children: React.ReactNode }): JSX.Element => {
   const [openDrawer, setOpenDrawer] = React.useState<boolean>(false)
   const [openDialog, setOpenDialog] = React.useState<boolean>(false)
+  const [openNoFeatureDialog, setOpenNoFeatureDialog] = React.useState<boolean>(false)
   const [searchParam, setSearchParam] = React.useState<string>('')
 
   const handleDrawer = () => {
@@ -28,7 +30,8 @@ const ContentPaper = ({ children }: { children: React.ReactNode }): JSX.Element 
   }
 
   const handleSearch = () => {
-    console.log('search icon clicked')
+    setOpenNoFeatureDialog((prev) => !prev)
+    setSearchParam('')
   }
 
   return (
@@ -70,6 +73,7 @@ const ContentPaper = ({ children }: { children: React.ReactNode }): JSX.Element 
             }}
           />
           <DialogComponent open={openDialog} handleClose={handleDialog} />
+          <NoFeatureDialog open={openNoFeatureDialog} handleClose={handleSearch} />
           <LargeActionButton buttonText="tweet about it!" onClick={handleDialog} Icon={RateReviewIcon} />
         </Toolbar>
         {children}

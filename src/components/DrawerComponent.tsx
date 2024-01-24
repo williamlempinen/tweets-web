@@ -8,27 +8,33 @@ import SettingsIcon from '@mui/icons-material/Settings'
 import AttributionIcon from '@mui/icons-material/Attribution'
 import theme from '../theme'
 import { useNavigate } from 'react-router-dom'
+import NoFeatureDialog from './NoFeatureDialog'
 
 type DrawerElement = {
   name: string
   Icon?: React.ReactNode
-  nav?: string
+  func?: () => void
 }
 
 const DrawerContent = (): JSX.Element => {
+  const [openDialog, setOpenDialog] = React.useState<boolean>(false)
   const navigate = useNavigate()
 
   const drawerPrimaryElements: DrawerElement[] = [
-    { name: 'Home', Icon: <HomeIcon />, nav: '/user-content' },
-    { name: 'Messages', Icon: <MailIcon /> },
-    { name: 'Friends', Icon: <PeopleAltIcon /> },
-    { name: 'Drafts', Icon: <DraftsIcon /> },
+    { name: 'Home', Icon: <HomeIcon />, func: () => navigate('/user-content') },
+    { name: 'Messages', Icon: <MailIcon />, func: () => handleDialog() },
+    { name: 'Friends', Icon: <PeopleAltIcon />, func: () => handleDialog() },
+    { name: 'Drafts', Icon: <DraftsIcon />, func: () => handleDialog() },
   ]
 
   const drawerSecondaryElements: DrawerElement[] = [
-    { name: 'Settings', Icon: <SettingsIcon /> },
-    { name: 'Author', Icon: <AttributionIcon /> },
+    { name: 'Settings', Icon: <SettingsIcon />, func: () => handleDialog() },
+    { name: 'Author', Icon: <AttributionIcon />, func: () => handleDialog() },
   ]
+
+  const handleDialog = () => {
+    setOpenDialog((prev) => !prev)
+  }
 
   const handleAvatar = () => {
     navigate('/user-profile')
@@ -57,7 +63,7 @@ const DrawerContent = (): JSX.Element => {
         <List>
           {drawerPrimaryElements.map((element) => (
             <ListItem key={element.name} sx={{ color: 'primary.main' }} disablePadding>
-              <ListItemButton onClick={() => element.nav && navigate(element.nav)}>
+              <ListItemButton onClick={element.func ? element.func : undefined}>
                 {element.Icon ? (
                   <ListItemIcon sx={{ color: theme.palette.primary.main }}>{element.Icon}</ListItemIcon>
                 ) : null}
@@ -67,11 +73,12 @@ const DrawerContent = (): JSX.Element => {
           ))}
         </List>
       </Box>
+      <NoFeatureDialog open={openDialog} handleClose={handleDialog} />
       <Box>
         <List>
           {drawerSecondaryElements.map((element) => (
             <ListItem key={element.name} sx={{ color: 'secondary.main' }} disablePadding>
-              <ListItemButton>
+              <ListItemButton onClick={element.func ? element.func : undefined}>
                 {element.Icon ? (
                   <ListItemIcon sx={{ color: theme.palette.secondary.main }}>{element.Icon}</ListItemIcon>
                 ) : null}

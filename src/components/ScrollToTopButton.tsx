@@ -7,7 +7,7 @@ const ScrollToTopButton = (): JSX.Element => {
   const [isVisible, setIsVisible] = React.useState<boolean>(false)
 
   const toggleVisibility = () => {
-    setIsVisible(document.documentElement.scrollTop > 200)
+    setIsVisible(document.documentElement.scrollTop > 180)
   }
 
   const scrollToTop = () => {
@@ -19,7 +19,7 @@ const ScrollToTopButton = (): JSX.Element => {
 
   window.addEventListener('scroll', toggleVisibility)
   return (
-    <Box sx={{ display: isVisible ? 'inline' : 'none' }}>
+    <Box sx={{ display: isVisible ? 'inline' : 'none', position: 'fixed', bottom: 20, right: 40, zIndex: 100 }}>
       <Tooltip title="Go to top">
         <IconButton onClick={scrollToTop}>
           <KeyboardDoubleArrowUpIcon fontSize="large" sx={{ color: theme.palette.secondary.main }} />

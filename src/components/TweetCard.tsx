@@ -7,30 +7,44 @@ import LikeButton from './LikeButton'
 import { format } from 'date-fns'
 import { AppContext } from '../AppContext'
 import { usePostAddComment, usePostLikeComment, usePostLikeTweet } from '../querys'
-
-//card is not responsive
+import ErrorDialog from './ErrorDialog'
 
 const TweetCard = ({ tweet }: { tweet: Tweet }): JSX.Element => {
   const [openComments, setOpenComments] = React.useState<{ [key: string]: boolean }>({})
   const [comment, setComment] = React.useState<string>('')
+  const [openErrorDialog, setOpenErrorDialog] = React.useState<boolean>(false)
 
   const { user } = React.useContext(AppContext)
 
-  const { mutate: likeTweet, isError: likeTweetIsError } = usePostLikeTweet(user.id)
+  const { mutate: likeTweet } = usePostLikeTweet(user.id)
 
-  const { mutate: addComment, isError: newCommentIsError } = usePostAddComment(user.name)
+  const { mutate: addComment } = usePostAddComment(user.name)
 
-  const { mutate: likeComment, isError: likeCommentIsError } = usePostLikeComment(user.id)
+  const { mutate: likeComment } = usePostLikeComment(user.id)
 
   const handleLikeTweet = (tweetId: number) => {
     if (user.id && tweetId) {
-      likeTweet(tweetId)
+      likeTweet(tweetId, {
+        onError: () => {
+          setOpenErrorDialog(true)
+          setTimeout(() => {
+            setOpenErrorDialog(false)
+          }, 3000)
+        },
+      })
     }
   }
 
   const handleLikeComment = (commentId: number) => {
     if (user.id && commentId) {
-      likeComment(commentId)
+      likeComment(commentId, {
+        onError: () => {
+          setOpenErrorDialog(true)
+          setTimeout(() => {
+            setOpenErrorDialog(false)
+          }, 3000)
+        },
+      })
     }
   }
 
@@ -46,9 +60,13 @@ const TweetCard = ({ tweet }: { tweet: Tweet }): JSX.Element => {
       userId: user?.id,
       content: comment,
     }
+    setComment('')
     addComment(newComment, {
-      onSuccess: () => {
-        setComment('')
+      onError: () => {
+        setOpenErrorDialog(true)
+        setTimeout(() => {
+          setOpenErrorDialog(false)
+        }, 3000)
       },
     })
   }
@@ -94,6 +112,7 @@ const TweetCard = ({ tweet }: { tweet: Tweet }): JSX.Element => {
         >
           {tweet?.content}
         </Box>
+        <ErrorDialog open={openErrorDialog} />
         <Box sx={{ display: 'flex', justifyContent: 'space-between', px: 1 }}>
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <LikeButton isLiked={tweet?.likes.includes(user.id)} onClick={() => handleLikeTweet(tweet.id)} />
