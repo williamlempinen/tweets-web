@@ -25,7 +25,7 @@ const DialogComponent = ({
 
   const { user } = React.useContext(AppContext)
 
-  const { mutate: postTweet, isError, isLoading } = usePostTweet(user?.name)
+  const { mutate: postTweet, isError, isLoading } = usePostTweet(user?.name ?? '')
 
   const handleTitle = (event: React.ChangeEvent<HTMLInputElement>) => {
     event.preventDefault()
@@ -44,7 +44,7 @@ const DialogComponent = ({
     }
     setTextFieldError(textFieldError)
 
-    if (!textFieldError.title && !textFieldError.content) {
+    if (!textFieldError.title && !textFieldError.content && user?.id !== undefined) {
       const tweetPayload = {
         userId: user?.id,
         title: title,

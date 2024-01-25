@@ -53,6 +53,7 @@ export const usePostTweet = (username: string) => {
     onError: (err, newTweet, context) => {
       if (context?.previousTweets) {
         queryClient.setQueryData(['find-all-tweets'], context.previousTweets)
+        console.log(err, newTweet)
       }
     },
     onSettled: () => {
@@ -90,6 +91,7 @@ export const usePostLikeTweet = (userId: number) => {
     onError: (err, tweetId, context) => {
       if (context?.previousTweets) {
         queryClient.setQueryData<Tweet[]>(['find-all-tweets'], context.previousTweets)
+        console.log(err, tweetId)
       }
     },
     onSettled: () => {
@@ -137,6 +139,7 @@ export const usePostAddComment = (username: string) => {
     onError: (err, newComment, context) => {
       if (context?.previousTweets) {
         queryClient.setQueryData(['find-all-tweets'], context.previousTweets)
+        console.log(err, newComment)
       }
     },
     onSettled: () => {
@@ -183,6 +186,7 @@ export const usePostLikeComment = (userId: number) => {
     onError: (err, commentId, context) => {
       if (context?.previousTweets) {
         queryClient.setQueryData<Tweet[]>(['find-all-tweets'], context.previousTweets)
+        console.log(err, commentId)
       }
     },
     onSettled: () => {

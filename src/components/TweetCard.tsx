@@ -16,14 +16,14 @@ const TweetCard = ({ tweet }: { tweet: Tweet }): JSX.Element => {
 
   const { user } = React.useContext(AppContext)
 
-  const { mutate: likeTweet } = usePostLikeTweet(user.id)
+  const { mutate: likeTweet } = usePostLikeTweet(user?.id ?? 0)
 
-  const { mutate: addComment } = usePostAddComment(user.name)
+  const { mutate: addComment } = usePostAddComment(user?.name ?? '')
 
-  const { mutate: likeComment } = usePostLikeComment(user.id)
+  const { mutate: likeComment } = usePostLikeComment(user?.id ?? 0)
 
   const handleLikeTweet = (tweetId: number) => {
-    if (user.id && tweetId) {
+    if (user?.id && tweetId) {
       likeTweet(tweetId, {
         onError: () => {
           setOpenErrorDialog(true)
@@ -36,7 +36,7 @@ const TweetCard = ({ tweet }: { tweet: Tweet }): JSX.Element => {
   }
 
   const handleLikeComment = (commentId: number) => {
-    if (user.id && commentId) {
+    if (user?.id && commentId) {
       likeComment(commentId, {
         onError: () => {
           setOpenErrorDialog(true)
@@ -115,7 +115,10 @@ const TweetCard = ({ tweet }: { tweet: Tweet }): JSX.Element => {
         <ErrorDialog open={openErrorDialog} />
         <Box sx={{ display: 'flex', justifyContent: 'space-between', px: 1 }}>
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <LikeButton isLiked={tweet?.likes.includes(user.id)} onClick={() => handleLikeTweet(tweet.id)} />
+            <LikeButton
+              isLiked={tweet?.likes.includes(user?.id ?? 0)}
+              onClick={() => handleLikeTweet(tweet?.id ?? 0)}
+            />
             <Typography variant="caption" color="text.secondary">
               {`${tweet?.likesCount} likes`}
             </Typography>
@@ -157,7 +160,7 @@ const TweetCard = ({ tweet }: { tweet: Tweet }): JSX.Element => {
                 InputProps={{
                   endAdornment: (
                     <Tooltip title="Send">
-                      <IconButton onClick={() => handleAddNewComment(tweet.id)}>
+                      <IconButton onClick={() => handleAddNewComment(tweet?.id ?? 0)}>
                         <SendIcon sx={{ color: theme.palette.secondary.main }} />
                       </IconButton>
                     </Tooltip>
@@ -185,7 +188,7 @@ const TweetCard = ({ tweet }: { tweet: Tweet }): JSX.Element => {
                 </Box>
                 <Box>
                   <LikeButton
-                    isLiked={comment?.likes.includes(user.id)}
+                    isLiked={comment?.likes.includes(user?.id ?? 0)}
                     onClick={() => handleLikeComment(comment.id)}
                   />
                   <Typography variant="caption" color="text.secondary" key={comment.id}>

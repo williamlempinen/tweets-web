@@ -5,7 +5,6 @@ import TweetCard from '../components/TweetCard'
 import { useFindAllTweets } from '../querys'
 import ErrorBox from '../components/ErrorBox'
 import theme from '../theme'
-import { setHours } from 'date-fns'
 
 const Root = ({ children }: { children: React.ReactNode }): JSX.Element => {
   return (
@@ -43,8 +42,9 @@ const UserContent = (): JSX.Element => {
   React.useEffect(() => {
     setIsData(!isLoading && (data.length !== 0 ? true : false))
   }, [data, isLoading])
+
   const tweets = data.map((tweet) => {
-    const newDate = new Date(tweet?.timeStamp)
+    const newDate = new Date(tweet?.timeStamp ?? Date.now())
     newDate.setHours(newDate.getHours() + 2)
     return { ...tweet, timeStamp: newDate }
   })
@@ -81,7 +81,7 @@ const UserContent = (): JSX.Element => {
   return (
     <Root>
       {tweetsReverse.map((tweet, index) => (
-        <TweetCard key={`${tweet?.id}-${index}`} tweet={tweet} />
+        <TweetCard key={`${tweet?.id}-${index}`} tweet={tweet as Tweet} />
       ))}
     </Root>
   )
