@@ -25,6 +25,7 @@ Backend code can be found [here](https://github.com/williamlempinen/tweets-java)
 ## Running locally
 
 - Clone project
+- cd /tweets-web
 - Run `npm install`
 - In the project's root directory create a file `.env`
 - Add this to the `.env`-file : `VITE_API_URL=https://tweets-qmda.onrender.com/api`
