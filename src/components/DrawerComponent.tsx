@@ -56,9 +56,7 @@ const DrawerContent = (): JSX.Element => {
             component="a"
             onClick={handleAvatar}
             sx={{ height: 100, width: 100, boxShadow: 2, '&:hover': { backgroundColor: 'primary.main' } }}
-          >
-            Avatar
-          </Avatar>
+          ></Avatar>
         </Box>
         <List>
           {drawerPrimaryElements.map((element) => (

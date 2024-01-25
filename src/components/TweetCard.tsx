@@ -79,10 +79,10 @@ const TweetCard = ({ tweet }: { tweet: Tweet }): JSX.Element => {
             {tweet?.timeStamp ? (
               <>
                 <Typography variant="caption" color="text.secondary">
-                  {format(new Date(tweet.timeStamp), 'HH:mm')}
+                  {format(tweet.timeStamp, 'HH:mm')}
                 </Typography>
                 <Typography variant="caption" color="text.secondary">
-                  {format(new Date(tweet.timeStamp), 'dd/MM/yyyy')}
+                  {format(tweet.timeStamp, 'dd/MM/yyyy')}
                 </Typography>
               </>
             ) : (

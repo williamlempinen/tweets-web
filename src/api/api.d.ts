@@ -29,7 +29,7 @@ type Tweet = {
   tweetComments: CommentType[] | []
   likes: number[]
   ownerName: string
-  timeStamp: Date
+  timeStamp: Date | string
   likesCount: number
 } | null
 

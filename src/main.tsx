@@ -8,7 +8,14 @@ import { ThemeProvider } from '@mui/material'
 import theme from './theme.ts'
 import { AppContextProvider } from './AppContext.tsx'
 
-const queryClient = new QueryClient()
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 5 * (60 * 1000), 
+      cacheTime: 10 * (60 * 1000), 
+    },
+  },
+})
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>

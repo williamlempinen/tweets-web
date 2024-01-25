@@ -40,8 +40,8 @@ const ContentPaper = ({ children }: { children: React.ReactNode }): JSX.Element 
         id="drawer-container"
         sx={{
           height: '100%',
-          minHeight: '95vh',
-          minWidth: '90%',
+          minHeight: '100vh',
+          minWidth: '95%',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
@@ -77,7 +77,6 @@ const ContentPaper = ({ children }: { children: React.ReactNode }): JSX.Element 
           <LargeActionButton buttonText="tweet about it!" onClick={handleDialog} Icon={RateReviewIcon} />
         </Toolbar>
         {children}
-        {/**scroll to top not working properly */}
         <ScrollToTopButton />
       </Card>
     </Box>
