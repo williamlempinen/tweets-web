@@ -1,27 +1,31 @@
-# React + TypeScript + Vite
+# Twitter clone or something
+>[!IMPORTANT]
+>Deployments to github-pages don't work, so to try my code you have to run it on your own machine.
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## About
 
-Currently, two official plugins are available:
+My project tries to be a some sort of clone for twitter. Main idea is that users can post tweets, comment them and like them. This is also the only implemented feature, and other features like, chat, friends,... will be probably added later.
+I have created several users beforehand and with these you can only go through login.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+| Email | Password | 
+|----------|----------|
+| eero@example.com | eero |
+| william@example.com | william | 
+| tuomas@example.com | tuomas | 
 
-## Expanding the ESLint configuration
+>[!NOTE]
+>Server shutdowns itself when being unused -> loading during the login might take a while, about 2-4min
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
 
-- Configure the top-level `parserOptions` property like this:
 
-```js
-   parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-   },
-```
+Techonologies used in this project are React, Typescript, Material UI, React Query. 
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+Backend code can be found [here](https://github.com/williamlempinen/tweets-java)
+
+## Running locally
+
+- Clone project
+- Run `npm install`
+- In the project's root directory create a file `.env`
+- Add this to the `.env`-file : `VITE_API_URL=https://tweets-qmda.onrender.com/api`
+- Run `npm run dev` to start project locally.
