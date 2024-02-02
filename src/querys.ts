@@ -1,4 +1,4 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQuery, useInfiniteQuery, useQueryClient } from '@tanstack/react-query'
 import { javaTweetsApiClient } from './api/javaTweetsApiClient'
 
 export const usePostUserCredentials = () => {
@@ -10,7 +10,19 @@ export const usePostUserCredentials = () => {
 export const useFindAllTweets = () => {
   const { getFindAllTweets } = javaTweetsApiClient()
 
-  return useQuery<Tweet[]>(['find-all-tweets'], () => getFindAllTweets(), { refetchOnWindowFocus: false })
+  return useInfiniteQuery<TweetFindAllResponse>(
+    ['find-all-tweets'],
+    ({ pageParam = 0 }) => getFindAllTweets(pageParam, 10),
+    {
+      refetchOnWindowFocus: false,
+      getNextPageParam: (lastPage) => {
+        if (!lastPage.last) {
+          return lastPage.number + 1
+        }
+        return undefined
+      },
+    }
+  )
 }
 
 export const useFindAllTweetsFriends = (userId: number) => {

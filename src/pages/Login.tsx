@@ -156,7 +156,7 @@ const Login = (): JSX.Element => {
         {isLoginError ? (
           <ErrorBox isLoading={isLoading} message="Error during login, check your email and password." />
         ) : null}
-        {isLoading ? <LinearLoadingProgress /> : null}
+        {isLoading ? <LinearLoadingProgress absolute={true} /> : null}
       </Card>
     </Root>
   )

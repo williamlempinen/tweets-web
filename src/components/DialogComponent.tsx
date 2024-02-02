@@ -98,7 +98,7 @@ const DialogComponent = ({
         />
         <LargeActionButton Icon={SendIcon} onClick={handleTweetPost} buttonText="Tweet" />
         {isError ? <ErrorBox isLoading={isLoading} message="Something went wrong during tweeting :(" /> : null}
-        {isLoading ? <LinearLoadingProgress /> : null}
+        {isLoading ? <LinearLoadingProgress absolute={true} /> : null}
       </Box>
     </Dialog>
   )

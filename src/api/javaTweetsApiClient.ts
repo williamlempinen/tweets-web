@@ -1,10 +1,11 @@
 import axios from 'axios'
 
-const URL = import.meta.env.VITE_API_URL
+//const URL = import.meta.env.VITE_API_URL
+const URL = import.meta.env.VITE_API_URL_LOCAL
 
 type JavaTweetsApiClientReturnType = {
   postUserLogin: (userCredentials: UserLoginDTO) => Promise<User>
-  getFindAllTweets: () => Promise<Tweet[]>
+  getFindAllTweets: (page: number, size: number) => Promise<TweetFindAllResponse>
   getFindAllTweetsFriends: (userId: number) => Promise<Tweet[]>
   postNewTweet: (tweet: PostTweet) => Promise<void>
   postLikeTweet: (tweetId: number, userId: number) => Promise<void>
@@ -16,7 +17,8 @@ export const javaTweetsApiClient = (): JavaTweetsApiClientReturnType => {
   const postUserLogin = (userCredentials: UserLoginDTO) =>
     axios.post(`${URL}/user/login`, userCredentials).then((response) => response.data)
 
-  const getFindAllTweets = () => axios.get(`${URL}/tweet/find-all`).then((response) => response.data)
+  const getFindAllTweets = (page: number, size: number) =>
+    axios.get(`${URL}/tweet/find-all`, { params: { page, size } }).then((response) => response.data)
 
   const getFindAllTweetsFriends = (userId: number) =>
     axios.get(`${URL}/tweet/find-by-friends`, { params: { userId } }).then((response) => response.data)
@@ -40,6 +42,6 @@ export const javaTweetsApiClient = (): JavaTweetsApiClientReturnType => {
     postNewTweet,
     postLikeTweet,
     postAddComment,
-    postLikeComment
+    postLikeComment,
   }
 }
