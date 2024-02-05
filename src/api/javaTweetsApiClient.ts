@@ -8,9 +8,10 @@ type JavaTweetsApiClientReturnType = {
   getFindAllTweets: (page: number, size: number) => Promise<TweetFindAllResponse>
   getFindAllTweetsFriends: (userId: number) => Promise<Tweet[]>
   postNewTweet: (tweet: PostTweet) => Promise<void>
-  postLikeTweet: (tweetId: number, userId: number) => Promise<void>
+  postLikeTweet: (userLike: PostLikeTweet) => Promise<void>
   postAddComment: (comment: PostComment) => Promise<void>
-  postLikeComment: (commentId: number, userId: number) => Promise<void>
+  postLikeComment: (userLike: PostLikeComment) => Promise<void>
+  deleteTweet: (tweetId: number) => Promise<void>
 }
 
 export const javaTweetsApiClient = (): JavaTweetsApiClientReturnType => {
@@ -24,16 +25,19 @@ export const javaTweetsApiClient = (): JavaTweetsApiClientReturnType => {
     axios.get(`${URL}/tweet/find-by-friends`, { params: { userId } }).then((response) => response.data)
 
   const postNewTweet = (tweet: PostTweet) =>
-    axios.post(`${URL}/tweet/post-tweet`, null, { params: tweet }).then((response) => response.data)
+    axios.post(`${URL}/tweet/post-tweet`, tweet).then((response) => response.data)
 
-  const postLikeTweet = (tweetId: number, userId: number) =>
-    axios.post(`${URL}/tweet`, null, { params: { tweetId, userId } }).then((response) => response.data)
+  const postLikeTweet = (userLike: PostLikeTweet) =>
+    axios.post(`${URL}/tweet`, userLike).then((response) => response.data)
 
   const postAddComment = (comment: PostComment) =>
-    axios.post(`${URL}/tweet/comments`, null, { params: comment }).then((response) => response.data)
+    axios.post(`${URL}/tweet/comments`, comment).then((response) => response.data)
 
-  const postLikeComment = (commentId: number, userId: number) =>
-    axios.post(`${URL}/comment`, null, { params: { commentId, userId } }).then((response) => response.data)
+  const postLikeComment = (userLike: PostLikeComment) =>
+    axios.post(`${URL}/comment`, userLike).then((response) => response.data)
+
+  const deleteTweet = (tweetId: number) =>
+    axios.delete(`${URL}/tweet`, { params: { tweetId } }).then((response) => response.data)
 
   return {
     postUserLogin,
@@ -43,5 +47,6 @@ export const javaTweetsApiClient = (): JavaTweetsApiClientReturnType => {
     postLikeTweet,
     postAddComment,
     postLikeComment,
+    deleteTweet,
   }
 }

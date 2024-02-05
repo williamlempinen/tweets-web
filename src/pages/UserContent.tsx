@@ -46,9 +46,7 @@ const UserContent = (): JSX.Element => {
     setIsData(!isLoading && (data?.pages?.length !== 0 ? true : false))
 
     if (inView && hasNextPage) {
-      console.log(isFetchingNextPage, 'nextpage')
       fetchNextPage()
-      console.log(isLoading, 'isloadoing')
     }
   }, [data, isLoading, inView, hasNextPage, fetchNextPage])
 
@@ -60,7 +58,6 @@ const UserContent = (): JSX.Element => {
         return { ...tweet, timeStamp: newDate }
       })
     ) ?? []
-  const tweetsReverse = [...tweets].reverse()
 
   if (isError) {
     return (
@@ -92,7 +89,7 @@ const UserContent = (): JSX.Element => {
 
   return (
     <Root>
-      {tweetsReverse.map((tweet, index) => (
+      {tweets.map((tweet, index) => (
         <TweetCard key={`${tweet?.id}-${index}`} tweet={tweet as Tweet} />
       ))}
       {isFetchingNextPage && <LinearLoadingProgress />}

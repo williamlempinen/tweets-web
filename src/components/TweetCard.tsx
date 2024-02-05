@@ -1,12 +1,13 @@
 import * as React from 'react'
-import { Card, Box, Typography, Tooltip, IconButton, TextField } from '@mui/material'
+import { Card, Box, Typography, Tooltip, IconButton, TextField, Icon } from '@mui/material'
 import SendIcon from '@mui/icons-material/Send'
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import theme from '../theme'
 import LikeButton from './LikeButton'
 import { format } from 'date-fns'
 import { AppContext } from '../AppContext'
-import { usePostAddComment, usePostLikeComment, usePostLikeTweet } from '../querys'
+import { useDeleteTweet, usePostAddComment, usePostLikeComment, usePostLikeTweet } from '../querys'
 import ErrorDialog from './ErrorDialog'
 
 const TweetCard = ({ tweet }: { tweet: Tweet }): JSX.Element => {
@@ -21,6 +22,7 @@ const TweetCard = ({ tweet }: { tweet: Tweet }): JSX.Element => {
   const { mutate: addComment } = usePostAddComment(user?.name ?? '')
 
   const { mutate: likeComment } = usePostLikeComment(user?.id ?? 0)
+  const { mutate: deleteTweet } = useDeleteTweet()
 
   const handleLikeTweet = (tweetId: number) => {
     if (user?.id && tweetId) {
@@ -71,9 +73,18 @@ const TweetCard = ({ tweet }: { tweet: Tweet }): JSX.Element => {
     })
   }
 
+  const handleDeleteTweet = (tweetId: number) => {
+    console.log('delete tweet', tweetId)
+    deleteTweet(tweetId)
+  }
+
   return (
     <>
-      <Card key={`${tweet?.id}-${tweet?.timeStamp}`} elevation={4} sx={{ width: '95%', my: 2, p: 1, minHeight: 150 }}>
+      <Card
+        key={`${tweet?.id}-${tweet?.timeStamp}`}
+        elevation={4}
+        sx={{ width: '95%', minWidth: 700, my: 2, p: 1, minHeight: 150 }}
+      >
         <Box sx={{ display: 'flex', gap: 3, alignItems: 'center', mx: 3 }}>
           <Box sx={{ display: 'flex', flexDirection: 'column' }}>
             {tweet?.timeStamp ? (
@@ -95,6 +106,13 @@ const TweetCard = ({ tweet }: { tweet: Tweet }): JSX.Element => {
           <Typography variant="h4" color="text.primary">
             {tweet?.title}
           </Typography>
+          {user?.name === tweet?.ownerName && (
+            <Tooltip title="Delete tweet">
+              <IconButton onClick={() => tweet?.id && handleDeleteTweet(tweet.id)}>
+                <DeleteOutlineIcon />
+              </IconButton>
+            </Tooltip>
+          )}
         </Box>
         <Box
           sx={{

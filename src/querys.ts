@@ -1,5 +1,6 @@
-import { useMutation, useQuery, useInfiniteQuery, useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQuery, useInfiniteQuery, useQueryClient, QueryClient } from '@tanstack/react-query'
 import { javaTweetsApiClient } from './api/javaTweetsApiClient'
+import { QuizTwoTone } from '@mui/icons-material'
 
 export const usePostUserCredentials = () => {
   const { postUserLogin } = javaTweetsApiClient()
@@ -41,24 +42,27 @@ export const usePostTweet = (username: string) => {
   return useMutation((tweet: PostTweet) => postNewTweet(tweet), {
     onMutate: async (tweet) => {
       await queryClient.cancelQueries(['find-all-tweets'])
-      const previousTweets = queryClient.getQueryData<Tweet[]>(['find-all-tweets'])
+      const previousTweets = queryClient.getQueryData<{ pages: { content: Tweet[] }[] }>(['find-all-tweets'])
 
       if (previousTweets) {
-        queryClient.setQueryData<Tweet[]>(
-          ['find-all-tweets'],
-          [
-            ...previousTweets,
-            {
-              ...tweet,
-              id: Math.random(),
-              tweetComments: [],
-              likes: [],
-              ownerName: username,
-              timeStamp: new Date(),
-              likesCount: 0,
-            },
-          ]
-        )
+        const newTweet = {
+          ...tweet,
+          id: Math.random(),
+          tweetComments: [],
+          likes: [],
+          ownerName: username,
+          timeStamp: new Date(),
+          likesCount: 0,
+        }
+
+        const updatedPages = [...previousTweets.pages]
+
+        if (updatedPages.length > 0) {
+          updatedPages[0].content = [newTweet, ...updatedPages[0].content]
+        } else {
+          updatedPages.push({ content: [newTweet] })
+        }
+        queryClient.setQueryData(['find-all-tweets'], { ...previousTweets, pages: updatedPages })
       }
       return { previousTweets }
     },
@@ -78,30 +82,34 @@ export const usePostLikeTweet = (userId: number) => {
 
   const queryClient = useQueryClient()
 
-  return useMutation((tweetId: number) => postLikeTweet(tweetId, userId), {
+  return useMutation((tweetId: number) => postLikeTweet({ tweetId, userId }), {
     onMutate: async (tweetId) => {
       await queryClient.cancelQueries(['find-all-tweets'])
-      const previousTweets = queryClient.getQueryData<Tweet[]>(['find-all-tweets'])
+      const previousTweets = queryClient.getQueryData<{ pages: { content: Tweet[] }[] }>(['find-all-tweets'])
 
       if (previousTweets) {
-        queryClient.setQueryData<Tweet[]>(
-          ['find-all-tweets'],
-          previousTweets.map((tweet) => {
+        const updatedPages = previousTweets.pages.map((page) => ({
+          ...page,
+          content: page.content.map((tweet) => {
             if (tweet?.id === tweetId) {
               const isLiked = tweet.likes.includes(userId)
               const newLikes = isLiked ? tweet.likes.filter((id) => id !== userId) : [...tweet.likes, userId]
-              return { ...tweet, likes: newLikes, likesCount: isLiked ? tweet.likesCount - 1 : tweet.likesCount + 1 }
+              return {
+                ...tweet,
+                likes: newLikes,
+                likesCount: isLiked ? tweet.likesCount - 1 : tweet.likesCount + 1,
+              }
             }
             return tweet
-          })
-        )
+          }),
+        }))
+        queryClient.setQueryData(['find-all-tweets'], { ...previousTweets, pages: updatedPages })
       }
-
       return { previousTweets }
     },
     onError: (err, tweetId, context) => {
       if (context?.previousTweets) {
-        queryClient.setQueryData<Tweet[]>(['find-all-tweets'], context.previousTweets)
+        queryClient.setQueryData(['find-all-tweets'], context.previousTweets)
       }
     },
     onSettled: () => {
@@ -117,17 +125,17 @@ export const usePostAddComment = (username: string) => {
   return useMutation((comment: PostComment) => postAddComment(comment), {
     onMutate: async (newComment) => {
       await queryClient.cancelQueries(['find-all-tweets'])
-      const previousTweets = queryClient.getQueryData<Tweet[]>(['find-all-tweets'])
+      const previousTweets = queryClient.getQueryData<{ pages: { content: Tweet[] }[] }>(['find-all-tweets'])
 
       if (previousTweets) {
-        queryClient.setQueryData<Tweet[]>(
-          ['find-all-tweets'],
-          previousTweets.map((tweet) => {
+        const updatedPages = previousTweets.pages.map((page) => ({
+          ...page,
+          content: page.content.map((tweet) => {
             if (tweet?.id === newComment.tweetId) {
               return {
                 ...tweet,
                 tweetComments: [
-                  ...tweet.tweetComments,
+                  ...tweet?.tweetComments,
                   {
                     id: Math.random(),
                     onTweet: tweet,
@@ -141,10 +149,11 @@ export const usePostAddComment = (username: string) => {
               }
             }
             return tweet
-          })
-        )
+          }),
+        }))
+        queryClient.setQueryData(['find-all-tweets'], { ...previousTweets, pages: updatedPages })
+        return { previousTweets }
       }
-      return { previousTweets }
     },
     onError: (err, newComment, context) => {
       if (context?.previousTweets) {
@@ -162,19 +171,17 @@ export const usePostLikeComment = (userId: number) => {
 
   const queryClient = useQueryClient()
 
-  return useMutation((commentId: number) => postLikeComment(commentId, userId), {
+  return useMutation((commentId: number) => postLikeComment({ commentId, userId }), {
     onMutate: async (commentId) => {
       await queryClient.cancelQueries(['find-all-tweets'])
-      const previousTweets = queryClient.getQueryData<Tweet[]>(['find-all-tweets'])
+      const previousTweets = queryClient.getQueryData<{ pages: { content: Tweet[] }[] }>(['find-all-tweets'])
 
       if (previousTweets) {
-        queryClient.setQueryData<Tweet[]>(
-          ['find-all-tweets'],
-          previousTweets.map((tweet) => {
-            if (!tweet) {
-              return null
-            }
-            const updatedComments = tweet?.tweetComments.map((comment) => {
+        const updatedPages = previousTweets.pages.map((page) => ({
+          ...page,
+          content: page.content.map((tweet) => ({
+            ...tweet,
+            tweetComments: tweet?.tweetComments.map((comment) => {
               if (comment.id === commentId) {
                 const isLiked = comment.likes.includes(userId)
                 const newLikes = isLiked ? comment.likes.filter((id) => id !== userId) : [...comment.likes, userId]
@@ -185,16 +192,47 @@ export const usePostLikeComment = (userId: number) => {
                 }
               }
               return comment
-            })
-            return { ...tweet, tweetComments: updatedComments }
-          })
-        )
+            }),
+          })),
+        }))
+        queryClient.setQueryData(['find-all-tweets'], { ...previousTweets, pages: updatedPages })
       }
       return { previousTweets }
     },
     onError: (err, commentId, context) => {
       if (context?.previousTweets) {
-        queryClient.setQueryData<Tweet[]>(['find-all-tweets'], context.previousTweets)
+        queryClient.setQueryData(['find-all-tweets'], context.previousTweets)
+      }
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries(['find-all-tweets'])
+    },
+  })
+}
+
+export const useDeleteTweet = () => {
+  const { deleteTweet } = javaTweetsApiClient()
+
+  const queryClient = useQueryClient()
+
+  return useMutation((tweetId: number) => deleteTweet(tweetId), {
+    onMutate: async (tweetId) => {
+      await queryClient.cancelQueries(['find-all-tweets'])
+      const previousTweets = queryClient.getQueryData<{ pages: { content: Tweet[] }[] }>(['find-all-tweets'])
+
+      if (previousTweets) {
+        const updatedPages = previousTweets?.pages.map((page) => ({
+          ...page,
+          content: page.content.filter((tweet?) => tweet?.id !== tweetId),
+        }))
+
+        queryClient.setQueryData(['find-all-tweets'], { ...previousTweets, pages: updatedPages })
+      }
+      return { previousTweets }
+    },
+    onError: (err, commentId, context) => {
+      if (context?.previousTweets) {
+        queryClient.setQueryData(['find-all-tweets'], context.previousTweets)
       }
     },
     onSettled: () => {

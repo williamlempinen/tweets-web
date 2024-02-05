@@ -84,3 +84,13 @@ type PostComment = {
   userId: number | undefined
   content: string
 }
+
+type PostLikeTweet = {
+  tweetId: number
+  userId: number
+}
+
+type PostLikeComment = {
+  commentId: number
+  userId: number
+}
