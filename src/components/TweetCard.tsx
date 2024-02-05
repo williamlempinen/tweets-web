@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Card, Box, Typography, Tooltip, IconButton, TextField, Icon } from '@mui/material'
+import { Card, Box, Typography, Tooltip, IconButton, TextField } from '@mui/material'
 import SendIcon from '@mui/icons-material/Send'
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
