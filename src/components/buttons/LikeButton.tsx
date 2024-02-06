@@ -1,6 +1,6 @@
 import { Tooltip, IconButton } from '@mui/material'
 import FavoriteIcon from '@mui/icons-material/Favorite'
-import theme from '../theme'
+import theme from '../../theme'
 
 const LikeButton = ({ onClick, isLiked }: { onClick: () => void; isLiked: boolean | undefined }): JSX.Element => {
   return (

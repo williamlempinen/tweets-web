@@ -4,16 +4,25 @@ import SendIcon from '@mui/icons-material/Send'
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import theme from '../theme'
-import LikeButton from './LikeButton'
+import LikeButton from './buttons/LikeButton'
 import { format } from 'date-fns'
 import { AppContext } from '../AppContext'
-import { useDeleteTweet, usePostAddComment, usePostLikeComment, usePostLikeTweet } from '../querys'
-import ErrorDialog from './ErrorDialog'
+import {
+  useAddUserFriend,
+  useDeleteFriendUser,
+  useDeleteTweet,
+  usePostAddComment,
+  usePostLikeComment,
+  usePostLikeTweet,
+} from '../querys'
+import ErrorDialog from './error/ErrorDialog'
+import AddFriendButton from './buttons/AddFriendButton'
 
 const TweetCard = ({ tweet }: { tweet: Tweet }): JSX.Element => {
   const [openComments, setOpenComments] = React.useState<{ [key: string]: boolean }>({})
   const [comment, setComment] = React.useState<string>('')
   const [openErrorDialog, setOpenErrorDialog] = React.useState<boolean>(false)
+  const [isCommentEmpty, setIsCommentEmpty] = React.useState<boolean>(false)
 
   const { user } = React.useContext(AppContext)
 
@@ -22,7 +31,12 @@ const TweetCard = ({ tweet }: { tweet: Tweet }): JSX.Element => {
   const { mutate: addComment } = usePostAddComment(user?.name ?? '')
 
   const { mutate: likeComment } = usePostLikeComment(user?.id ?? 0)
+
   const { mutate: deleteTweet } = useDeleteTweet()
+
+  const { mutate: addAsFriend } = useAddUserFriend()
+
+  const { mutate: removeAsFriend } = useDeleteFriendUser()
 
   const handleLikeTweet = (tweetId: number) => {
     if (user?.id && tweetId) {
@@ -57,6 +71,12 @@ const TweetCard = ({ tweet }: { tweet: Tweet }): JSX.Element => {
   }
 
   const handleAddNewComment = (tweetId: number) => {
+    if (comment.trim() === '') {
+      setIsCommentEmpty(true)
+      return
+    }
+    setIsCommentEmpty(false)
+
     const newComment = {
       tweetId: tweetId,
       userId: user?.id,
@@ -74,8 +94,32 @@ const TweetCard = ({ tweet }: { tweet: Tweet }): JSX.Element => {
   }
 
   const handleDeleteTweet = (tweetId: number) => {
-    console.log('delete tweet', tweetId)
-    deleteTweet(tweetId)
+    deleteTweet(tweetId, {
+      onError: () => {
+        setOpenErrorDialog(true)
+        setTimeout(() => {
+          setOpenErrorDialog(false)
+        }, 3000)
+      },
+    })
+  }
+
+  const checkFriendShip = (tweet: Tweet) => {
+    return user?.friendsList.some((friend) => friend.name === tweet?.ownerName)
+  }
+
+  const handleUserFriendShip = (tweet: Tweet) => {
+    const isFriend = checkFriendShip(tweet)
+
+    if (isFriend) {
+      removeAsFriend({
+        userId: user?.id ?? 0,
+        friendUserId: tweet?.ownerId ?? 0,
+        friendUserName: tweet?.ownerName ?? '',
+      })
+      return
+    }
+    addAsFriend({ userId: user?.id ?? 0, friendUserId: tweet?.ownerId ?? 0, friendUserName: tweet?.ownerName ?? '' })
   }
 
   return (
@@ -99,9 +143,20 @@ const TweetCard = ({ tweet }: { tweet: Tweet }): JSX.Element => {
             ) : (
               <Typography variant="caption">No timestamp</Typography>
             )}
-            <Typography variant="subtitle2" color="text.primary">
-              {tweet?.ownerName}
-            </Typography>
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <Typography
+                variant="subtitle2"
+                color={user?.name === tweet?.ownerName ? theme.palette.primary.main : 'text.primary'}
+              >
+                {tweet?.ownerName}
+              </Typography>
+              {user?.name !== tweet?.ownerName && (
+                <AddFriendButton
+                  isFriend={checkFriendShip(tweet) ?? false}
+                  onClick={() => handleUserFriendShip(tweet)}
+                />
+              )}
+            </Box>
           </Box>
           <Typography variant="h4" color="text.primary">
             {tweet?.title}
@@ -172,6 +227,10 @@ const TweetCard = ({ tweet }: { tweet: Tweet }): JSX.Element => {
               <TextField
                 variant="standard"
                 value={comment}
+                multiline
+                inputProps={{ maxLength: 255 }}
+                error={isCommentEmpty}
+                helperText={isCommentEmpty ? "Comment can't be empty" : ''}
                 onChange={(e) => setComment(e.target.value)}
                 fullWidth
                 placeholder="Add a comment"
@@ -199,7 +258,10 @@ const TweetCard = ({ tweet }: { tweet: Tweet }): JSX.Element => {
                 }}
               >
                 <Box sx={{ flexWrap: 'wrap', maxWidth: 900 }}>
-                  <Typography variant="caption" color="text.secondary">
+                  <Typography
+                    variant="caption"
+                    color={user?.name === comment.ownerName ? theme.palette.primary.main : 'text.secondary'}
+                  >
                     {`${comment.ownerName} - ${format(new Date(tweet?.timeStamp), 'dd/MM/yyyy')}`}
                   </Typography>
                   <Typography>{comment.content}</Typography>

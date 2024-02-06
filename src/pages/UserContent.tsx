@@ -3,10 +3,10 @@ import { Box, Card, Skeleton, Typography } from '@mui/material'
 import ContentPaper from '../components/ContentPaper'
 import TweetCard from '../components/TweetCard'
 import { useFindAllTweets } from '../querys'
-import ErrorBox from '../components/ErrorBox'
+import ErrorBox from '../components/error/ErrorBox'
 import theme from '../theme'
 import { useInView } from 'react-intersection-observer'
-import LinearLoadingProgress from '../components/LinearLoadingProgress'
+import LinearLoadingProgress from '../components/loading/LinearLoadingProgress'
 
 const Root = ({ children }: { children: React.ReactNode }): JSX.Element => {
   return (
@@ -54,7 +54,7 @@ const UserContent = (): JSX.Element => {
     data?.pages?.flatMap((page) =>
       page.content.map((tweet) => {
         const newDate = new Date(tweet?.timeStamp ?? Date.now())
-        newDate.setHours(newDate.getHours() + 2)
+        newDate.setHours(newDate.getHours())
         return { ...tweet, timeStamp: newDate }
       })
     ) ?? []

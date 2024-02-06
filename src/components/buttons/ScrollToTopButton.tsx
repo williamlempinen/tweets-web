@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { Box, Tooltip, IconButton } from '@mui/material'
 import KeyboardDoubleArrowUpIcon from '@mui/icons-material/KeyboardDoubleArrowUp'
-import theme from '../theme'
+import theme from '../../theme'
 
 const ScrollToTopButton = (): JSX.Element => {
   const [isVisible, setIsVisible] = React.useState<boolean>(false)

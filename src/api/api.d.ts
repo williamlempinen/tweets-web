@@ -12,13 +12,13 @@ type UserFriend = {
   friends: null
 }
 
-type User = {
+type UserDTO = {
   id: number
   name: string
   email: string
   tweetList: Tweet[] | []
   commentList: CommentType[] | []
-  friends: UserFriend[] | []
+  friendsList: UserFriend[] | []
 }
 
 type Pagination = {
@@ -64,6 +64,7 @@ type CommentType = {
 
 type Tweet = {
   id: number
+  ownerId: number | undefined
   title: string
   content: string
   tweetComments: CommentType[] | []
@@ -93,4 +94,10 @@ type PostLikeTweet = {
 type PostLikeComment = {
   commentId: number
   userId: number
+}
+
+type UserFriendStatus = {
+  userId: number
+  friendUserId: number
+  friendUserName: string
 }

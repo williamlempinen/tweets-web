@@ -1,6 +1,7 @@
-import { useMutation, useQuery, useInfiniteQuery, useQueryClient, QueryClient } from '@tanstack/react-query'
+import * as React from 'react'
+import { useMutation, useQuery, useInfiniteQuery, useQueryClient } from '@tanstack/react-query'
 import { javaTweetsApiClient } from './api/javaTweetsApiClient'
-import { QuizTwoTone } from '@mui/icons-material'
+import { AppContext } from './AppContext'
 
 export const usePostUserCredentials = () => {
   const { postUserLogin } = javaTweetsApiClient()
@@ -26,6 +27,7 @@ export const useFindAllTweets = () => {
   )
 }
 
+//TODO ##########################################################
 export const useFindAllTweetsFriends = (userId: number) => {
   const { getFindAllTweetsFriends } = javaTweetsApiClient()
 
@@ -33,9 +35,12 @@ export const useFindAllTweetsFriends = (userId: number) => {
     refetchOnWindowFocus: false,
   })
 }
+//TODO ##########################################################
 
 export const usePostTweet = (username: string) => {
   const { postNewTweet } = javaTweetsApiClient()
+
+  const { user } = React.useContext(AppContext)
 
   const queryClient = useQueryClient()
 
@@ -48,13 +53,13 @@ export const usePostTweet = (username: string) => {
         const newTweet = {
           ...tweet,
           id: Math.random(),
+          ownerId: user?.id,
           tweetComments: [],
           likes: [],
           ownerName: username,
           timeStamp: new Date(),
           likesCount: 0,
         }
-
         const updatedPages = [...previousTweets.pages]
 
         if (updatedPages.length > 0) {
@@ -237,6 +242,47 @@ export const useDeleteTweet = () => {
     },
     onSettled: () => {
       queryClient.invalidateQueries(['find-all-tweets'])
+    },
+  })
+}
+
+export const useAddUserFriend = () => {
+  const { postAddFriend } = javaTweetsApiClient()
+
+  const { user, setUser } = React.useContext(AppContext)
+
+  return useMutation((userFriendEvent: UserFriendStatus) => postAddFriend(userFriendEvent), {
+    onMutate: (userFriendEvent) => {
+      if (user) {
+        const newFriend: UserFriend = {
+          id: userFriendEvent.friendUserId,
+          name: userFriendEvent.friendUserName,
+          email: '', //TODO #################################
+          tweetList: null,
+          commentList: null,
+          friends: null,
+        }
+
+        const updatedFriends = [...user.friendsList, newFriend]
+        setUser({ ...user, friendsList: updatedFriends })
+      }
+    },
+  })
+}
+
+export const useDeleteFriendUser = () => {
+  const { deleteRemoveFriend } = javaTweetsApiClient()
+
+  const { user, setUser } = React.useContext(AppContext)
+
+  return useMutation((userFriendEvent: UserFriendStatus) => deleteRemoveFriend(userFriendEvent), {
+    onMutate: (userFriendEvent) => {
+      if (user) {
+        const updatedFriends = user.friendsList.filter(
+          (friend: UserFriend) => friend.name !== userFriendEvent.friendUserName
+        )
+        setUser({ ...user, friendsList: updatedFriends })
+      }
     },
   })
 }

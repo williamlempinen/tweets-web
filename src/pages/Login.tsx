@@ -7,9 +7,9 @@ import Visibility from '@mui/icons-material/Visibility'
 import LoginIcon from '@mui/icons-material/Login'
 import { usePostUserCredentials } from '../querys'
 import { useNavigate } from 'react-router-dom'
-import ErrorBox from '../components/ErrorBox'
-import LargeActionButton from '../components/LargeActionButton'
-import LinearLoadingProgress from '../components/LinearLoadingProgress'
+import ErrorBox from '../components/error/ErrorBox'
+import LargeActionButton from '../components/buttons/LargeActionButton'
+import LinearLoadingProgress from '../components/loading/LinearLoadingProgress'
 import { AppContext } from '../AppContext'
 
 const Root = ({ children }: { children: React.ReactNode }): JSX.Element => {

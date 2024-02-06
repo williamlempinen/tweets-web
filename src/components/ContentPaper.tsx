@@ -5,10 +5,10 @@ import SearchIcon from '@mui/icons-material/Search'
 import theme from '../theme'
 import DrawerComponent from './DrawerComponent'
 import DialogComponent from './DialogComponent'
-import LargeActionButton from './LargeActionButton'
-import ScrollToTopButton from './ScrollToTopButton'
+import LargeActionButton from './buttons/LargeActionButton'
+import ScrollToTopButton from './buttons/ScrollToTopButton'
 import RateReviewIcon from '@mui/icons-material/RateReview'
-import NoFeatureDialog from './NoFeatureDialog'
+import NoFeatureDialog from './loading/NoFeatureDialog'
 
 const ContentPaper = ({ children }: { children: React.ReactNode }): JSX.Element => {
   const [openDrawer, setOpenDrawer] = React.useState<boolean>(false)

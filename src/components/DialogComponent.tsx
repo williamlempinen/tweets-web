@@ -3,11 +3,11 @@ import { Box, TextField, InputAdornment, Dialog, DialogTitle } from '@mui/materi
 import SendIcon from '@mui/icons-material/Send'
 import TitleIcon from '@mui/icons-material/Title'
 import theme from '../theme'
-import LargeActionButton from './LargeActionButton'
-import LinearLoadingProgress from './LinearLoadingProgress'
+import LargeActionButton from './buttons/LargeActionButton'
+import LinearLoadingProgress from './loading/LinearLoadingProgress'
 import { usePostTweet } from '../querys'
 import { AppContext } from '../AppContext'
-import ErrorBox from './ErrorBox'
+import ErrorBox from './error/ErrorBox'
 
 const DialogComponent = ({
   open,

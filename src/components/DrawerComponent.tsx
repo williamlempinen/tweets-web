@@ -8,7 +8,7 @@ import SettingsIcon from '@mui/icons-material/Settings'
 import AttributionIcon from '@mui/icons-material/Attribution'
 import theme from '../theme'
 import { useNavigate } from 'react-router-dom'
-import NoFeatureDialog from './NoFeatureDialog'
+import NoFeatureDialog from './loading/NoFeatureDialog'
 
 type DrawerElement = {
   name: string
