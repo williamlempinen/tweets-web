@@ -3,11 +3,11 @@ import { Box, TextField, InputAdornment, Dialog, DialogTitle } from '@mui/materi
 import SendIcon from '@mui/icons-material/Send'
 import TitleIcon from '@mui/icons-material/Title'
 import theme from '../theme'
-import LargeActionButton from './LargeActionButton'
-import LinearLoadingProgress from './LinearLoadingProgress'
+import LargeActionButton from './buttons/LargeActionButton'
+import LinearLoadingProgress from './loading/LinearLoadingProgress'
 import { usePostTweet } from '../querys'
 import { AppContext } from '../AppContext'
-import ErrorBox from './ErrorBox'
+import ErrorBox from './error/ErrorBox'
 
 const DialogComponent = ({
   open,
@@ -47,6 +47,7 @@ const DialogComponent = ({
     if (!textFieldError.title && !textFieldError.content && user?.id !== undefined) {
       const tweetPayload = {
         userId: user?.id,
+        userEmail: user?.email,
         title: title,
         content: content,
       }
@@ -98,7 +99,7 @@ const DialogComponent = ({
         />
         <LargeActionButton Icon={SendIcon} onClick={handleTweetPost} buttonText="Tweet" />
         {isError ? <ErrorBox isLoading={isLoading} message="Something went wrong during tweeting :(" /> : null}
-        {isLoading ? <LinearLoadingProgress /> : null}
+        {isLoading ? <LinearLoadingProgress absolute={true} /> : null}
       </Box>
     </Dialog>
   )

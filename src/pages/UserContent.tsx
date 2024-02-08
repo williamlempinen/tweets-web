@@ -3,8 +3,10 @@ import { Box, Card, Skeleton, Typography } from '@mui/material'
 import ContentPaper from '../components/ContentPaper'
 import TweetCard from '../components/TweetCard'
 import { useFindAllTweets } from '../querys'
-import ErrorBox from '../components/ErrorBox'
+import ErrorBox from '../components/error/ErrorBox'
 import theme from '../theme'
+import { useInView } from 'react-intersection-observer'
+import LinearLoadingProgress from '../components/loading/LinearLoadingProgress'
 
 const Root = ({ children }: { children: React.ReactNode }): JSX.Element => {
   return (
@@ -12,7 +14,7 @@ const Root = ({ children }: { children: React.ReactNode }): JSX.Element => {
       <Box
         sx={{
           width: '90%',
-          height: '90%',
+          height: '100%',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
@@ -36,19 +38,26 @@ const LoadingSkeleton = (): JSX.Element => {
 
 const UserContent = (): JSX.Element => {
   const [isData, setIsData] = React.useState<boolean>(true)
+  const { ref, inView } = useInView()
 
-  const { data = [], isError, isLoading, refetch } = useFindAllTweets()
+  const { data, isError, isLoading, refetch, hasNextPage, fetchNextPage, isFetchingNextPage } = useFindAllTweets()
 
   React.useEffect(() => {
-    setIsData(!isLoading && (data.length !== 0 ? true : false))
-  }, [data, isLoading])
+    setIsData(!isLoading && (data?.pages?.length !== 0 ? true : false))
 
-  const tweets = data.map((tweet) => {
-    const newDate = new Date(tweet?.timeStamp ?? Date.now())
-    newDate.setHours(newDate.getHours() + 2)
-    return { ...tweet, timeStamp: newDate }
-  })
-  const tweetsReverse = [...tweets].reverse()
+    if (inView && hasNextPage) {
+      fetchNextPage()
+    }
+  }, [data, isLoading, inView, hasNextPage, fetchNextPage])
+
+  const tweets =
+    data?.pages?.flatMap((page) =>
+      page.content.map((tweet) => {
+        const newDate = new Date(tweet?.timeStamp ?? Date.now())
+        newDate.setHours(newDate.getHours())
+        return { ...tweet, timeStamp: newDate }
+      })
+    ) ?? []
 
   if (isError) {
     return (
@@ -80,9 +89,11 @@ const UserContent = (): JSX.Element => {
 
   return (
     <Root>
-      {tweetsReverse.map((tweet, index) => (
+      {tweets.map((tweet, index) => (
         <TweetCard key={`${tweet?.id}-${index}`} tweet={tweet as Tweet} />
       ))}
+      {isFetchingNextPage && <LinearLoadingProgress />}
+      <Box ref={ref} sx={{ height: 1 }} />
     </Root>
   )
 }
