@@ -50,14 +50,14 @@ const UserContent = (): JSX.Element => {
     }
   }, [data, isLoading, inView, hasNextPage, fetchNextPage])
 
-  const tweets =
-    data?.pages?.flatMap((page) =>
-      page.content.map((tweet) => {
+  const tweets = data?.pages?.flatMap(
+    (page) =>
+      page?.content.map((tweet) => {
         const newDate = new Date(tweet?.timeStamp ?? Date.now())
-        newDate.setHours(newDate.getHours())
+        newDate.setHours(newDate.getHours() + 2)
         return { ...tweet, timeStamp: newDate }
       })
-    ) ?? []
+  )
 
   if (isError) {
     return (
@@ -89,9 +89,7 @@ const UserContent = (): JSX.Element => {
 
   return (
     <Root>
-      {tweets.map((tweet, index) => (
-        <TweetCard key={`${tweet?.id}-${index}`} tweet={tweet as Tweet} />
-      ))}
+      {tweets?.map((tweet, index) => <TweetCard key={`${tweet?.id}-${index}`} tweet={tweet as Tweet} />)}
       {isFetchingNextPage && <LinearLoadingProgress />}
       <Box ref={ref} sx={{ height: 1 }} />
     </Root>
