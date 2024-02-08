@@ -124,6 +124,12 @@ const TweetCard = ({ tweet }: { tweet: Tweet }): JSX.Element => {
             setUser(user)
             sessionStorage.setItem('user', JSON.stringify(user))
           },
+          onError: () => {
+            setOpenErrorDialog(true)
+            setTimeout(() => {
+              setOpenErrorDialog(false)
+            }, 3000)
+          },
         })
         return
       }
@@ -131,6 +137,12 @@ const TweetCard = ({ tweet }: { tweet: Tweet }): JSX.Element => {
         onSuccess: (user) => {
           setUser(user)
           sessionStorage.setItem('user', JSON.stringify(user))
+        },
+        onError: () => {
+          setOpenErrorDialog(true)
+          setTimeout(() => {
+            setOpenErrorDialog(false)
+          }, 3000)
         },
       })
     }
