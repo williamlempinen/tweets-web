@@ -65,6 +65,7 @@ type CommentType = {
 type Tweet = {
   id: number
   ownerId: number | undefined
+  ownerEmail: string | undefined
   title: string
   content: string
   tweetComments: CommentType[] | []
@@ -76,6 +77,7 @@ type Tweet = {
 
 type PostTweet = {
   userId: number
+  userEmail: string
   title: string
   content: string
 }
@@ -100,4 +102,5 @@ type UserFriendStatus = {
   userId: number
   friendUserId: number
   friendUserName: string
+  friendUserEmail: string
 }

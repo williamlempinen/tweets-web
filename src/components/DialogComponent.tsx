@@ -47,6 +47,7 @@ const DialogComponent = ({
     if (!textFieldError.title && !textFieldError.content && user?.id !== undefined) {
       const tweetPayload = {
         userId: user?.id,
+        userEmail: user?.email,
         title: title,
         content: content,
       }

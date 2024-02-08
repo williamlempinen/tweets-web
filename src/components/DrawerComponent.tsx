@@ -38,7 +38,6 @@ const DrawerContent = (): JSX.Element => {
 
   const handleAvatar = () => {
     navigate('/user-profile')
-    console.log('avatar clicked')
   }
 
   return (

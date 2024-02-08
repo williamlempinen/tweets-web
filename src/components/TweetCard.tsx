@@ -24,7 +24,7 @@ const TweetCard = ({ tweet }: { tweet: Tweet }): JSX.Element => {
   const [openErrorDialog, setOpenErrorDialog] = React.useState<boolean>(false)
   const [isCommentEmpty, setIsCommentEmpty] = React.useState<boolean>(false)
 
-  const { user } = React.useContext(AppContext)
+  const { user, setUser } = React.useContext(AppContext)
 
   const { mutate: likeTweet } = usePostLikeTweet(user?.id ?? 0)
 
@@ -104,22 +104,36 @@ const TweetCard = ({ tweet }: { tweet: Tweet }): JSX.Element => {
     })
   }
 
-  const checkFriendShip = (tweet: Tweet) => {
-    return user?.friendsList.some((friend) => friend.name === tweet?.ownerName)
+  const checkFriendship = (tweet: Tweet) => {
+    return user?.friendsList?.some((friend) => friend.name === tweet?.ownerName)
   }
 
-  const handleUserFriendShip = (tweet: Tweet) => {
-    const isFriend = checkFriendShip(tweet)
-
-    if (isFriend) {
-      removeAsFriend({
-        userId: user?.id ?? 0,
-        friendUserId: tweet?.ownerId ?? 0,
+  const handleUserFriendship = (tweet: Tweet) => {
+    const isFriend = checkFriendship(tweet)
+    if (user?.id && tweet?.ownerId) {
+      const userFriendStatusUpdate = {
+        userId: user?.id,
+        friendUserId: tweet?.ownerId,
         friendUserName: tweet?.ownerName ?? '',
+        friendUserEmail: tweet?.ownerEmail ?? '',
+      }
+
+      if (isFriend) {
+        removeAsFriend(userFriendStatusUpdate, {
+          onSuccess: (user) => {
+            setUser(user)
+            sessionStorage.setItem('user', JSON.stringify(user))
+          },
+        })
+        return
+      }
+      addAsFriend(userFriendStatusUpdate, {
+        onSuccess: (user) => {
+          setUser(user)
+          sessionStorage.setItem('user', JSON.stringify(user))
+        },
       })
-      return
     }
-    addAsFriend({ userId: user?.id ?? 0, friendUserId: tweet?.ownerId ?? 0, friendUserName: tweet?.ownerName ?? '' })
   }
 
   return (
@@ -152,8 +166,8 @@ const TweetCard = ({ tweet }: { tweet: Tweet }): JSX.Element => {
               </Typography>
               {user?.name !== tweet?.ownerName && (
                 <AddFriendButton
-                  isFriend={checkFriendShip(tweet) ?? false}
-                  onClick={() => handleUserFriendShip(tweet)}
+                  isFriend={checkFriendship(tweet) ?? false}
+                  onClick={() => handleUserFriendship(tweet)}
                 />
               )}
             </Box>

@@ -54,6 +54,7 @@ export const usePostTweet = (username: string) => {
           ...tweet,
           id: Math.random(),
           ownerId: user?.id,
+          ownerEmail: user?.email,
           tweetComments: [],
           likes: [],
           ownerName: username,
@@ -249,7 +250,7 @@ export const useDeleteTweet = () => {
 export const useAddUserFriend = () => {
   const { postAddFriend } = javaTweetsApiClient()
 
-  const { user, setUser } = React.useContext(AppContext)
+  const { user } = React.useContext(AppContext)
 
   return useMutation((userFriendEvent: UserFriendStatus) => postAddFriend(userFriendEvent), {
     onMutate: (userFriendEvent) => {
@@ -257,14 +258,14 @@ export const useAddUserFriend = () => {
         const newFriend: UserFriend = {
           id: userFriendEvent.friendUserId,
           name: userFriendEvent.friendUserName,
-          email: '', //TODO #################################
+          email: userFriendEvent.friendUserEmail,
           tweetList: null,
           commentList: null,
           friends: null,
         }
-
         const updatedFriends = [...user.friendsList, newFriend]
-        setUser({ ...user, friendsList: updatedFriends })
+
+        return { ...user, friendsList: updatedFriends }
       }
     },
   })
@@ -273,7 +274,7 @@ export const useAddUserFriend = () => {
 export const useDeleteFriendUser = () => {
   const { deleteRemoveFriend } = javaTweetsApiClient()
 
-  const { user, setUser } = React.useContext(AppContext)
+  const { user } = React.useContext(AppContext)
 
   return useMutation((userFriendEvent: UserFriendStatus) => deleteRemoveFriend(userFriendEvent), {
     onMutate: (userFriendEvent) => {
@@ -281,7 +282,8 @@ export const useDeleteFriendUser = () => {
         const updatedFriends = user.friendsList.filter(
           (friend: UserFriend) => friend.name !== userFriendEvent.friendUserName
         )
-        setUser({ ...user, friendsList: updatedFriends })
+
+        return { ...user, friendsList: updatedFriends }
       }
     },
   })

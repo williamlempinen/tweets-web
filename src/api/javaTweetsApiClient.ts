@@ -12,8 +12,9 @@ type JavaTweetsApiClientReturnType = {
   postAddComment: (comment: PostComment) => Promise<void>
   postLikeComment: (userLike: PostLikeComment) => Promise<void>
   deleteTweet: (tweetId: number) => Promise<void>
-  postAddFriend: (userFriendEvent: UserFriendStatus) => Promise<void>
-  deleteRemoveFriend: (userFriendEvent: UserFriendStatus) => Promise<void>
+  postAddFriend: (userFriendEvent: UserFriendStatus) => Promise<UserDTO>
+  deleteRemoveFriend: (userFriendEvent: UserFriendStatus) => Promise<UserDTO>
+  getUpdatedUserFriends: (userId: number) => Promise<void>
 }
 
 export const javaTweetsApiClient = (): JavaTweetsApiClientReturnType => {
@@ -47,6 +48,9 @@ export const javaTweetsApiClient = (): JavaTweetsApiClientReturnType => {
   const deleteRemoveFriend = (userFriendEvent: UserFriendStatus) =>
     axios.delete(`${URL}/user`, { data: userFriendEvent }).then((response) => response.data)
 
+  const getUpdatedUserFriends = (userId: number) =>
+    axios.get(`${URL}/user/friends`, { params: { userId } }).then((response) => response.data)
+
   return {
     postUserLogin,
     getFindAllTweets,
@@ -58,5 +62,6 @@ export const javaTweetsApiClient = (): JavaTweetsApiClientReturnType => {
     deleteTweet,
     postAddFriend,
     deleteRemoveFriend,
+    getUpdatedUserFriends,
   }
 }
