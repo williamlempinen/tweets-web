@@ -7,9 +7,6 @@ type UserFriend = {
   id: number
   name: string
   email: string
-  tweetList: null
-  commentList: null
-  friends: null
 }
 
 type UserDTO = {
@@ -19,6 +16,7 @@ type UserDTO = {
   tweetList: Tweet[] | []
   commentList: CommentType[] | []
   friendsList: UserFriend[] | []
+  token: string
 }
 
 type Pagination = {

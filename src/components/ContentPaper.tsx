@@ -50,7 +50,7 @@ const ContentPaper = ({ children }: { children: React.ReactNode }): JSX.Element 
         }}
       >
         <DrawerComponent open={openDrawer} handleDrawer={handleDrawer} />
-        <Toolbar sx={{ width: '100%', display: 'felx', justifyContent: 'space-around', mb: 3 }}>
+        <Toolbar sx={{ width: '100%', display: 'flex', justifyContent: 'space-around', mb: 3 }}>
           <Tooltip title="More">
             <IconButton onClick={handleDrawer} sx={{ mx: 1 }}>
               <MenuIcon fontSize="large" sx={{ color: theme.palette.primary.main }} />

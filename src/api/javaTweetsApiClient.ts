@@ -1,6 +1,25 @@
 import axios from 'axios'
 
-const URL = import.meta.env.VITE_API_URL
+//const URL = import.meta.env.VITE_API_URL
+const URL = import.meta.env.VITE_API_URL_LOCAL
+
+const apiClient = axios.create({
+  baseURL: URL,
+})
+
+apiClient.interceptors.request.use(
+  (config) => {
+    const user = sessionStorage.getItem('user')
+    if (user) {
+      const token = JSON.parse(user).token
+      config.headers.Authorization = `Bearer ${token}`
+    }
+    return config
+  },
+  (error) => {
+    return Promise.reject(error)
+  }
+)
 
 type JavaTweetsApiClientReturnType = {
   postUserLogin: (userCredentials: UserLoginDTO) => Promise<UserDTO>
@@ -18,37 +37,37 @@ type JavaTweetsApiClientReturnType = {
 
 export const javaTweetsApiClient = (): JavaTweetsApiClientReturnType => {
   const postUserLogin = (userCredentials: UserLoginDTO) =>
-    axios.post(`${URL}/user/login`, userCredentials).then((response) => response.data)
+    apiClient.post(`/user/login`, userCredentials).then((response) => response.data)
 
   const getFindAllTweets = (page: number, size: number) =>
-    axios.get(`${URL}/tweet/find-all`, { params: { page, size } }).then((response) => response.data)
+    apiClient.get(`/tweet/find-all`, { params: { page, size } }).then((response) => response.data)
 
   const getFindAllTweetsFriends = (userId: number) =>
-    axios.get(`${URL}/tweet/find-by-friends`, { params: { userId } }).then((response) => response.data)
+    apiClient.get(`/tweet/find-by-friends`, { params: { userId } }).then((response) => response.data)
 
   const postNewTweet = (tweet: PostTweet) =>
-    axios.post(`${URL}/tweet/post-tweet`, tweet).then((response) => response.data)
+    apiClient.post(`/tweet/post-tweet`, tweet).then((response) => response.data)
 
   const postLikeTweet = (userLike: PostLikeTweet) =>
-    axios.post(`${URL}/tweet`, userLike).then((response) => response.data)
+    apiClient.post(`/tweet`, userLike).then((response) => response.data)
 
   const postAddComment = (comment: PostComment) =>
-    axios.post(`${URL}/tweet/comments`, comment).then((response) => response.data)
+    apiClient.post(`/tweet/comments`, comment).then((response) => response.data)
 
   const postLikeComment = (userLike: PostLikeComment) =>
-    axios.post(`${URL}/comment`, userLike).then((response) => response.data)
+    apiClient.post(`/comment`, userLike).then((response) => response.data)
 
   const deleteTweet = (tweetId: number) =>
-    axios.delete(`${URL}/tweet`, { params: { tweetId } }).then((response) => response.data)
+    apiClient.delete(`/tweet`, { params: { tweetId } }).then((response) => response.data)
 
   const postAddFriend = (userFriendEvent: UserFriendStatus) =>
-    axios.post(`${URL}/user`, userFriendEvent).then((response) => response.data)
+    apiClient.post(`/user`, userFriendEvent).then((response) => response.data)
 
   const deleteRemoveFriend = (userFriendEvent: UserFriendStatus) =>
-    axios.delete(`${URL}/user`, { data: userFriendEvent }).then((response) => response.data)
+    apiClient.delete(`/user`, { data: userFriendEvent }).then((response) => response.data)
 
   const getUpdatedUserFriends = (userId: number) =>
-    axios.get(`${URL}/user/friends`, { params: { userId } }).then((response) => response.data)
+    apiClient.get(`/user/friends`, { params: { userId } }).then((response) => response.data)
 
   return {
     postUserLogin,

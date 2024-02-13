@@ -259,9 +259,6 @@ export const useAddUserFriend = () => {
           id: userFriendEvent.friendUserId,
           name: userFriendEvent.friendUserName,
           email: userFriendEvent.friendUserEmail,
-          tweetList: null,
-          commentList: null,
-          friends: null,
         }
         const updatedFriends = [...user.friendsList, newFriend]
 
