@@ -50,6 +50,24 @@ type TweetFindAllResponse = {
   empty: boolean
 }
 
+type UserSearch = {
+  content: UserDTO[] | []
+  pageable: Pagination
+  last: boolean
+  totalPages: number
+  totalElements: number
+  size: number
+  number: number
+  sort: {
+    empty: boolean
+    sorted: boolean
+    unsorted: boolean
+  }
+  first: boolean
+  numberOfElements: number
+  empty: boolean
+}
+
 type CommentType = {
   id: number
   ownerName: string
@@ -68,7 +86,7 @@ type Tweet = {
   content: string
   tweetComments: CommentType[] | []
   likes: number[]
-  ownerName: string
+  ownerName: string | undefined
   timeStamp: Date | string
   likesCount: number
 } | null

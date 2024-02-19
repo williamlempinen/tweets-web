@@ -1,5 +1,4 @@
 import axios from 'axios'
-
 //const URL = import.meta.env.VITE_API_URL
 const URL = import.meta.env.VITE_API_URL_LOCAL
 
@@ -17,7 +16,7 @@ apiClient.interceptors.request.use(
     return config
   },
   (error) => {
-    return Promise.reject(error)
+    console.log(error)
   }
 )
 
@@ -33,6 +32,7 @@ type JavaTweetsApiClientReturnType = {
   postAddFriend: (userFriendEvent: UserFriendStatus) => Promise<UserDTO>
   deleteRemoveFriend: (userFriendEvent: UserFriendStatus) => Promise<UserDTO>
   getUpdatedUserFriends: (userId: number) => Promise<void>
+  getSearchUsers: (queryParams: string, page: number, size: number) => Promise<UserSearch>
 }
 
 export const javaTweetsApiClient = (): JavaTweetsApiClientReturnType => {
@@ -69,6 +69,9 @@ export const javaTweetsApiClient = (): JavaTweetsApiClientReturnType => {
   const getUpdatedUserFriends = (userId: number) =>
     apiClient.get(`/user/friends`, { params: { userId } }).then((response) => response.data)
 
+  const getSearchUsers = (queryParams: string, page: number, size: number) =>
+    apiClient.get('user/search', { params: { queryParams, page, size } }).then((response) => response.data)
+
   return {
     postUserLogin,
     getFindAllTweets,
@@ -81,5 +84,6 @@ export const javaTweetsApiClient = (): JavaTweetsApiClientReturnType => {
     postAddFriend,
     deleteRemoveFriend,
     getUpdatedUserFriends,
+    getSearchUsers,
   }
 }
