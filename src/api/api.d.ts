@@ -7,9 +7,6 @@ type UserFriend = {
   id: number
   name: string
   email: string
-  tweetList: null
-  commentList: null
-  friends: null
 }
 
 type UserDTO = {
@@ -19,6 +16,7 @@ type UserDTO = {
   tweetList: Tweet[] | []
   commentList: CommentType[] | []
   friendsList: UserFriend[] | []
+  token: string
 }
 
 type Pagination = {
@@ -36,6 +34,24 @@ type Pagination = {
 
 type TweetFindAllResponse = {
   content: Tweet[] | []
+  pageable: Pagination
+  last: boolean
+  totalPages: number
+  totalElements: number
+  size: number
+  number: number
+  sort: {
+    empty: boolean
+    sorted: boolean
+    unsorted: boolean
+  }
+  first: boolean
+  numberOfElements: number
+  empty: boolean
+}
+
+type UserSearch = {
+  content: UserDTO[] | []
   pageable: Pagination
   last: boolean
   totalPages: number
@@ -70,7 +86,7 @@ type Tweet = {
   content: string
   tweetComments: CommentType[] | []
   likes: number[]
-  ownerName: string
+  ownerName: string | undefined
   timeStamp: Date | string
   likesCount: number
 } | null

@@ -120,9 +120,10 @@ const TweetCard = ({ tweet }: { tweet: Tweet }): JSX.Element => {
 
       if (isFriend) {
         removeAsFriend(userFriendStatusUpdate, {
-          onSuccess: (user) => {
-            setUser(user)
-            sessionStorage.setItem('user', JSON.stringify(user))
+          onSuccess: (updatedUser) => {
+            const newUser = { ...updatedUser, token: user.token }
+            setUser(newUser)
+            sessionStorage.setItem('user', JSON.stringify(newUser))
           },
           onError: () => {
             setOpenErrorDialog(true)
@@ -134,9 +135,10 @@ const TweetCard = ({ tweet }: { tweet: Tweet }): JSX.Element => {
         return
       }
       addAsFriend(userFriendStatusUpdate, {
-        onSuccess: (user) => {
-          setUser(user)
-          sessionStorage.setItem('user', JSON.stringify(user))
+        onSuccess: (updatedUser) => {
+          const newUser = { ...updatedUser, token: user.token }
+          setUser(newUser)
+          sessionStorage.setItem('user', JSON.stringify(newUser))
         },
         onError: () => {
           setOpenErrorDialog(true)

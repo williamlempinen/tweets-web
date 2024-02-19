@@ -27,6 +27,23 @@ export const useFindAllTweets = () => {
   )
 }
 
+export const useSearchUsers = (queryParams: string) => {
+  const { getSearchUsers } = javaTweetsApiClient()
+  
+  return useInfiniteQuery<UserSearch>(
+    ['search-users'],
+    ({ pageParam = 0 }) => getSearchUsers(queryParams, pageParam, 5),
+    {
+      getNextPageParam: (lastPage) => {
+        if (!lastPage.last) {
+          return lastPage.number + 1
+        }
+        return undefined
+      },
+    }
+  )
+}
+
 //TODO ##########################################################
 export const useFindAllTweetsFriends = (userId: number) => {
   const { getFindAllTweetsFriends } = javaTweetsApiClient()
@@ -37,7 +54,7 @@ export const useFindAllTweetsFriends = (userId: number) => {
 }
 //TODO ##########################################################
 
-export const usePostTweet = (username: string) => {
+export const usePostTweet = () => {
   const { postNewTweet } = javaTweetsApiClient()
 
   const { user } = React.useContext(AppContext)
@@ -50,14 +67,14 @@ export const usePostTweet = (username: string) => {
       const previousTweets = queryClient.getQueryData<{ pages: { content: Tweet[] }[] }>(['find-all-tweets'])
 
       if (previousTweets) {
-        const newTweet = {
+        const newTweet: Tweet = {
           ...tweet,
           id: Math.random(),
           ownerId: user?.id,
           ownerEmail: user?.email,
           tweetComments: [],
           likes: [],
-          ownerName: username,
+          ownerName: user?.name,
           timeStamp: new Date(),
           likesCount: 0,
         }
@@ -259,9 +276,6 @@ export const useAddUserFriend = () => {
           id: userFriendEvent.friendUserId,
           name: userFriendEvent.friendUserName,
           email: userFriendEvent.friendUserEmail,
-          tweetList: null,
-          commentList: null,
-          friends: null,
         }
         const updatedFriends = [...user.friendsList, newFriend]
 

@@ -25,7 +25,7 @@ const DialogComponent = ({
 
   const { user } = React.useContext(AppContext)
 
-  const { mutate: postTweet, isError, isLoading } = usePostTweet(user?.name ?? '')
+  const { mutate: postTweet, isError, isLoading } = usePostTweet()
 
   const handleTitle = (event: React.ChangeEvent<HTMLInputElement>) => {
     event.preventDefault()

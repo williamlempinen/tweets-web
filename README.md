@@ -9,12 +9,13 @@ I have created several users beforehand and with these you can only go through l
 
 | Email | Password | 
 |----------|----------|
-| eero@example.com | eero |
-| william@example.com | william | 
-| tuomas@example.com | tuomas | 
+| rii@example.com | rii |
+| ree@example.com | ree | 
+| jarmo@example.com | jarmo | 
 
 >[!NOTE]
 >Server shutdowns itself when being unused -> loading during the login might take a while, about 2-4min
+>Due to the entityes attribute changes in database, interactions between some users might not work
 
 
 
