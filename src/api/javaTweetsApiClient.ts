@@ -1,6 +1,5 @@
 import axios from 'axios'
-//const URL = import.meta.env.VITE_API_URL
-const URL = import.meta.env.VITE_API_URL_LOCAL
+const URL = import.meta.env.VITE_API_URL
 
 const apiClient = axios.create({
   baseURL: URL,
