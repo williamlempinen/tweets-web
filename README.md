@@ -15,6 +15,7 @@ I have created several users beforehand and with these you can only go through l
 
 >[!NOTE]
 >Server shutdowns itself when being unused -> loading during the login might take a while, about 2-4min
+>
 >Due to the entityes attribute changes in database, interactions between some users might not work
 
 
