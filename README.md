@@ -24,11 +24,6 @@ Techonologies used in this project are React, Typescript, Material UI, React Que
 
 Backend code can be found [here](https://github.com/williamlempinen/tweets-java)
 
-## Running locally
+#### 23.5.2024
 
-- Clone project
-- `cd /tweets-web`
-- Run `npm install`
-- In the project's root directory create a file `.env`
-- Add this to the `.env`-file : `VITE_API_URL=https://tweets-qmda.onrender.com/api`
-- Run `npm run dev` to start project locally.
+This project is archived.
